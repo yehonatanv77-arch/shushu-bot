@@ -1,0 +1,58 @@
+name: SHUSHU Telegram Bot
+
+on:
+  schedule:
+    # Every hour between 07:00–22:00 Israel time (04:00–19:00 UTC)
+    - cron: "0 4 * * *"   # 07:00 IL
+    - cron: "0 5 * * *"   # 08:00 IL
+    - cron: "0 6 * * *"   # 09:00 IL
+    - cron: "0 7 * * *"   # 10:00 IL
+    - cron: "0 8 * * *"   # 11:00 IL
+    - cron: "0 9 * * *"   # 12:00 IL
+    - cron: "0 10 * * *"  # 13:00 IL
+    - cron: "0 11 * * *"  # 14:00 IL
+    - cron: "0 12 * * *"  # 15:00 IL
+    - cron: "0 13 * * *"  # 16:00 IL
+    - cron: "0 14 * * *"  # 17:00 IL
+    - cron: "0 15 * * *"  # 18:00 IL
+    - cron: "0 16 * * *"  # 19:00 IL
+    - cron: "0 17 * * *"  # 20:00 IL
+    - cron: "0 18 * * *"  # 21:00 IL
+    - cron: "0 19 * * *"  # 22:00 IL
+  workflow_dispatch:       # Manual trigger from GitHub UI
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run bot
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: "-1004476884876"
+          ARTICLE_EVERY_N_RUNS: "4"
+        run: python bot.py
+
+      - name: Commit tracker update
+        run: |
+          git config user.name "SHUSHU Bot"
+          git config user.email "bot@shushu-secret.com"
+          git add posted_products.json
+          git diff --cached --quiet || git commit -m "chore: tracker update [skip ci]"
+          git push

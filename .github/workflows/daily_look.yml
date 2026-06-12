@@ -1,0 +1,48 @@
+name: SHUSHU Daily Look
+
+on:
+  schedule:
+    # Every day at 09:00 Israel time (06:00 UTC)
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  daily-look:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Post daily look
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: "-1004476884876"
+        run: python -c "
+import sys
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+from bot import do_daily_look
+do_daily_look()
+"
+
+      - name: Commit tracker update
+        run: |
+          git config user.name "SHUSHU Bot"
+          git config user.email "bot@shushu-secret.com"
+          git add posted_products.json
+          git diff --cached --quiet || git commit -m "chore: daily look tracker [skip ci]"
+          git push
