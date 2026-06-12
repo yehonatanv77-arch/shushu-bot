@@ -2,7 +2,6 @@ name: SHUSHU Daily Look
 
 on:
   schedule:
-    # Every day at 09:00 Israel time (06:00 UTC)
     - cron: "0 6 * * *"
   workflow_dispatch:
 
@@ -31,13 +30,7 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHANNEL_ID: "-1004476884876"
-        run: python -c "
-import sys
-sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-sys.stderr.reconfigure(encoding='utf-8', errors='replace')
-from bot import do_daily_look
-do_daily_look()
-"
+        run: python run_daily_look.py
 
       - name: Commit tracker update
         run: |
