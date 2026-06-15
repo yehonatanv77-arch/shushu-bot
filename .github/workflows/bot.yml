@@ -53,7 +53,7 @@ jobs:
         run: |
           git config user.name "SHUSHU Bot"
           git config user.email "bot@shushu-secret.com"
+          git pull --rebase origin main
           git add posted_products.json
           git diff --cached --quiet || git commit -m "chore: tracker update [skip ci]"
-          git pull --rebase origin main
-          git push
+          git push || (git pull --rebase origin main && git push)
