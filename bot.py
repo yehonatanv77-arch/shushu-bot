@@ -123,44 +123,43 @@ def do_product(run_number: int):
         print("[bot] Tracker reset — restarting product cycle")
         unposted = all_products
 
-    # Pick the next product (use run_number to deterministically rotate through list)
-    # Sort by lastmod desc (newest first) to post newest products first
+    # Sort by lastmod desc (newest first)
     unposted.sort(key=lambda x: x.get("lastmod", ""), reverse=True)
-    entry = unposted[0]
 
-    pid = entry["id"]
-    print(f"[bot] Fetching product: {pid}")
-
-    product = fetch_product(pid, entry["url"], entry["lastmod"])
-    if not product or not product.name:
-        # Mark as seen so we skip it next run
-        tracker.mark_posted(pid, entry["url"], entry["lastmod"], [])
-        print("[bot] Product has no data — skipped and marked")
-        return False
-
-    print(f"[bot] Product: {product.name_en or product.name} | {product.price}")
-
-    # Rotate through 10 content formats based on run number
+    # Try up to 10 candidates until one posts successfully
     format_index = run_number % 10
-    post_text = generate_post(product, format_index)
-    if not post_text:
-        return False
+    for entry in unposted[:10]:
+        pid = entry["id"]
+        print(f"[bot] Fetching product: {pid}")
 
-    print(f"[bot] Format #{format_index} preview:\n{post_text[:250]}...")
+        product = fetch_product(pid, entry["url"], entry["lastmod"])
+        if not product or not product.name:
+            tracker.mark_posted(pid, entry["url"], entry["lastmod"], [])
+            print("[bot] No data — skipping to next")
+            continue
 
-    if product.images:
-        success = post_product(product.images, post_text)
-    else:
-        # No images — send as text (Telegram generates URL preview automatically)
-        result = send_text(post_text)
-        success = result is not None
+        print(f"[bot] Product: {product.name_en or product.name} | {product.price}")
 
-    if success:
-        tracker.mark_posted(pid, entry["url"], entry["lastmod"], [])
-        print(f"[bot] ✅ Product posted!")
-        return True
+        post_text = generate_post(product, format_index)
+        if not post_text:
+            continue
 
-    print("[bot] ❌ Product post failed")
+        print(f"[bot] Format #{format_index} preview:\n{post_text[:250]}...")
+
+        if product.images:
+            success = post_product(product.images, post_text)
+        else:
+            result = send_text(post_text)
+            success = result is not None
+
+        if success:
+            tracker.mark_posted(pid, entry["url"], entry["lastmod"], [])
+            print(f"[bot] ✅ Product posted!")
+            return True
+
+        print("[bot] ❌ Telegram failed, trying next product")
+
+    print("[bot] No product posted this run")
     return False
 
 
