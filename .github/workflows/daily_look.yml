@@ -38,4 +38,5 @@ jobs:
           git config user.email "bot@shushu-secret.com"
           git add posted_products.json
           git diff --cached --quiet || git commit -m "chore: daily look tracker [skip ci]"
+          git pull --rebase origin main
           git push
