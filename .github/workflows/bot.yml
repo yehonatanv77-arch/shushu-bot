@@ -44,19 +44,26 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run bot
+      - name: Run bot (with auto-retry)
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHANNEL_ID: "-1004476884876"
           ARTICLE_EVERY_N_RUNS: "4"
-        run: python bot.py
+        run: |
+          for attempt in 1 2 3; do
+            echo "=== Attempt $attempt ==="
+            python bot.py && break
+            echo "Attempt $attempt failed. Waiting 30s before retry..."
+            sleep 30
+          done
 
       - name: Commit tracker update
+        if: always()
         run: |
           git config user.name "SHUSHU Bot"
           git config user.email "bot@shushu-secret.com"
           git pull --rebase origin main
           git add posted_products.json
           git diff --cached --quiet || git commit -m "chore: tracker update [skip ci]"
-          git push
+          git push || (git pull --rebase origin main && git push)
