@@ -110,7 +110,7 @@ End the post with exactly:
 👇
 {url}
 
-Return ONLY the post text. Nothing else."""
+Do NOT include any other URL or link in the post body. Return ONLY the post text. Nothing else."""
 
 ARTICLE_POST_PROMPT = """You are the voice of SHUSHU — an Israeli Telegram community for fashion discovery.
 
@@ -138,6 +138,9 @@ def generate_post(product: Product, format_index: int) -> str:
     """Generates a Hebrew Telegram post in one of 10 rotating formats."""
     fmt = FORMATS[format_index % len(FORMATS)]
 
+    # Use affiliate link if available, fallback to site URL
+    buy_url = product.external_url if product.external_url else product.url
+
     prompt = PRODUCT_POST_PROMPT.format(
         format_name=fmt["name"],
         format_instruction=fmt["instruction"],
@@ -147,7 +150,7 @@ def generate_post(product: Product, format_index: int) -> str:
         sizes=product.sizes or "מידות שונות",
         description=(product.description or "")[:400],
         gender=product.gender or "",
-        url=product.url,
+        url=buy_url,
     )
 
     try:

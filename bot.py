@@ -146,10 +146,11 @@ def do_product(run_number: int):
 
         print(f"[bot] Format #{format_index} preview:\n{post_text[:250]}...")
 
+        buy_url = product.external_url if product.external_url else product.url
         if product.images:
-            success = post_product(product.images, post_text)
+            success = post_product(product.images, post_text, buy_url)
         else:
-            result = send_text(post_text)
+            result = send_text(post_text, buy_url)
             success = result is not None
 
         if success:

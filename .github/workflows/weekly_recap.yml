@@ -1,0 +1,46 @@
+name: SHUSHU Weekly Picks
+
+on:
+  schedule:
+    - cron: "0 7 * * 0"  # Every Sunday at 10:00 Israel time
+  workflow_dispatch:
+
+concurrency:
+  group: shushu-tracker
+  cancel-in-progress: false
+
+jobs:
+  weekly-picks:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Post weekly picks
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: "-1004476884876"
+        run: python weekly_picks.py
+
+      - name: Commit tracker update
+        run: |
+          git config user.name "SHUSHU Bot"
+          git config user.email "bot@shushu-secret.com"
+          git pull --rebase origin main
+          git add posted_products.json
+          git diff --cached --quiet || git commit -m "chore: weekly picks tracker [skip ci]"
+          git push
