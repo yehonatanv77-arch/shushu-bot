@@ -44,19 +44,16 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run bot (with auto-retry)
+      - name: Sync tracker (latest state from GitHub)
+        run: git pull origin main
+
+      - name: Run bot
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHANNEL_ID: "-1004476884876"
           ARTICLE_EVERY_N_RUNS: "4"
-        run: |
-          for attempt in 1 2 3; do
-            echo "=== Attempt $attempt ==="
-            python bot.py && break
-            echo "Attempt $attempt failed. Waiting 30s before retry..."
-            sleep 30
-          done
+        run: python bot.py || echo "Bot exited with error — tracker will still be committed"
 
       - name: Commit tracker update
         if: always()

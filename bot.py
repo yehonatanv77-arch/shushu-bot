@@ -146,6 +146,11 @@ def do_product(run_number: int):
 
         print(f"[bot] Format #{format_index} preview:\n{post_text[:250]}...")
 
+        # Final duplicate check right before sending (guards against concurrent runs)
+        if tracker.is_posted(pid):
+            print(f"[bot] {pid} was already posted — skipping")
+            continue
+
         buy_url = product.external_url if product.external_url else product.url
         if product.images:
             success = post_product(product.images, post_text, buy_url)

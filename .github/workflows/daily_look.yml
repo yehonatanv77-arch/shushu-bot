@@ -29,18 +29,15 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Post daily look (with auto-retry)
+      - name: Sync tracker (latest state from GitHub)
+        run: git pull origin main
+
+      - name: Post daily look
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHANNEL_ID: "-1004476884876"
-        run: |
-          for attempt in 1 2 3; do
-            echo "=== Attempt $attempt ==="
-            python run_daily_look.py && break
-            echo "Attempt $attempt failed. Waiting 30s before retry..."
-            sleep 30
-          done
+        run: python run_daily_look.py || echo "Daily look exited with error — tracker will still be committed"
 
       - name: Commit tracker update
         if: always()
