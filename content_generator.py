@@ -94,6 +94,8 @@ RULES:
 - Use the assigned format strictly
 - 1-2 emojis MAX — placed naturally, not at the start of every line
 - Never use: "מהמם", "מדהים", "חייבים", "עכשיו!", "הזדמנות!", "אל תפספסו"
+- Never use em dashes or long dashes (— or --)
+- Do NOT include any URL or link anywhere in the post
 
 ASSIGNED FORMAT: {format_name}
 {format_instruction}
@@ -106,11 +108,7 @@ Sizes: {sizes}
 Description: {description}
 Gender: {gender}
 
-End the post with exactly:
-👇
-{url}
-
-Do NOT include any other URL or link in the post body. Return ONLY the post text. Nothing else."""
+Return ONLY the post text. No URLs, no links, nothing else."""
 
 ARTICLE_POST_PROMPT = """You are the voice of SHUSHU — an Israeli Telegram community for fashion discovery.
 

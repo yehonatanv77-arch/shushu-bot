@@ -47,4 +47,9 @@ jobs:
           git pull --rebase origin main
           git add posted_products.json
           git diff --cached --quiet || git commit -m "chore: weekly picks tracker [skip ci]"
-          git push || (git pull --rebase origin main && git push)
+          for i in 1 2 3 4 5; do
+            git push && break
+            echo "Push attempt $i failed, retrying..."
+            git pull --rebase origin main
+            sleep 10
+          done
