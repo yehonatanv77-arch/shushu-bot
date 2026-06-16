@@ -26,12 +26,16 @@ def _is_image_accessible(url: str) -> bool:
         return False
 
 
+def _sanitize(text: str) -> str:
+    """Escape HTML special chars so parse_mode HTML never rejects the message."""
+    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
 def send_photo(image_url: str, caption: str, buy_url: str = "") -> Optional[dict]:
     payload = {
         "chat_id": CHANNEL_ID,
         "photo": image_url,
-        "caption": caption,
-        "parse_mode": "HTML",
+        "caption": _sanitize(caption),
     }
     if buy_url:
         payload["reply_markup"] = _buy_button(buy_url)
@@ -50,19 +54,19 @@ def send_media_group(image_urls: list[str], caption: str, buy_url: str = "") -> 
     valid_urls = [u for u in image_urls[:5] if _is_image_accessible(u)]
 
     if not valid_urls:
+        print(f"[telegram] No accessible images from {len(image_urls)} candidates")
         return None
 
     if len(valid_urls) == 1:
         return send_photo(valid_urls[0], caption, buy_url)
 
-    # Send media group (no inline keyboard support on media groups in Telegram)
-    # So: send images first, then send a text message with the button
+    # Send media group — Telegram doesn't support inline_keyboard on media groups
+    # so we send a follow-up message with the buy button
     media = []
     for i, url in enumerate(valid_urls):
         item = {"type": "photo", "media": url}
         if i == 0:
-            item["caption"] = caption
-            item["parse_mode"] = "HTML"
+            item["caption"] = _sanitize(caption)
         media.append(item)
 
     with httpx.Client(timeout=30) as client:
@@ -75,7 +79,6 @@ def send_media_group(image_urls: list[str], caption: str, buy_url: str = "") -> 
         print(f"[telegram] sendMediaGroup error: {data}")
         return None
 
-    # Follow up with button message if we have a buy URL
     if buy_url:
         with httpx.Client(timeout=30) as client:
             client.post(f"{BASE}/sendMessage", json={
@@ -90,8 +93,7 @@ def send_media_group(image_urls: list[str], caption: str, buy_url: str = "") -> 
 def send_text(text: str, buy_url: str = "") -> Optional[dict]:
     payload = {
         "chat_id": CHANNEL_ID,
-        "text": text,
-        "parse_mode": "HTML",
+        "text": _sanitize(text),
         "disable_web_page_preview": False,
     }
     if buy_url:
