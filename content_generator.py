@@ -10,7 +10,7 @@ from scraper import Product, Article, DailyLook
 
 client = anthropic.Anthropic()
 
-# 10 different content formats — rotated to keep the feed dynamic
+# 14 different content formats — rotated randomly to keep the feed fresh
 FORMATS = [
     {
         "name": "secret_find",
@@ -83,6 +83,34 @@ CTA של מילה אחת.""",
 "שוטטנו..." / "נתקלנו..." / "כשהסתכלנו על..."
 תחושה של גלישה נינוחה שהולידה ממצא מוצלח.""",
     },
+    {
+        "name": "before_after",
+        "instruction": """פורמט: לפני ואחרי.
+תאר איך הלוק / התחושה / הסיטואציה נראית בלי הפריט הזה, ואיך היא נראית איתו.
+אל תהיה דרמטי — תהיה אמיתי וקצת הומוריסטי.
+שורה אחת לפני, שורה אחת אחרי.""",
+    },
+    {
+        "name": "gift_idea",
+        "instruction": """פורמט: רעיון למתנה.
+הצג את המוצר כמתנה מושלמת לאחד מהפרופילים האלה: לעצמך / לחברה / לאמא / לאחות.
+אל תאמר "מושלם למתנה" — הראה למה בדיוק.
+תחושה אישית ומחושבת.""",
+    },
+    {
+        "name": "quality_catch",
+        "instruction": """פורמט: תפיסת איכות.
+דבר על מה שגורם לפריט הזה להרגיש יותר יקר ממה שהוא עולה.
+פרט אחד ספציפי על עיצוב / חומר / פינישינג שמסגיר את האיכות.
+תחושה של מישהו שמבין בזה.""",
+    },
+    {
+        "name": "capsule_piece",
+        "instruction": """פורמט: פריט בסיסי.
+הסבר למה הפריט הזה הוא "בסיסי" שיושב עם הכל ומשדרג כל לוק.
+ציין 2 שילובים קצרים וספציפיים (עם מה ללבוש אותו).
+אנרגיה של מישהו שבנה ארון לבוש חכם.""",
+    },
 ]
 
 PRODUCT_POST_PROMPT = """You are the voice of SHUSHU — an Israeli Telegram community for discovering hidden gems.
@@ -133,10 +161,9 @@ Return ONLY the post text."""
 
 
 def generate_post(product: Product, format_index: int) -> str:
-    """Generates a Hebrew Telegram post in one of 10 rotating formats."""
-    fmt = FORMATS[format_index % len(FORMATS)]
+    """Generates a Hebrew Telegram post using a randomly selected format."""
+    fmt = random.choice(FORMATS)
 
-    # Use affiliate link if available, fallback to site URL
     buy_url = product.external_url if product.external_url else product.url
 
     prompt = PRODUCT_POST_PROMPT.format(

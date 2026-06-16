@@ -110,25 +110,27 @@ def do_product(run_number: int):
         return False
 
     # Find next unposted product
-    unposted = [p for p in all_products if not tracker.is_posted(p["id"])]
+    data = tracker.load()
+    posted_ids = set(data.get("posted", {}).keys())
+    unposted = [p for p in all_products if p["id"] not in posted_ids]
 
     if not unposted:
         print("[bot] All products have been posted — cycle complete!")
-        # Reset tracker to restart the cycle (keep articles tracking)
-        data = tracker.load()
-        posted = data.get("posted", {})
-        # Remove only product entries (not articles)
-        data["posted"] = {k: v for k, v in posted.items() if k.startswith("article_")}
+        # Reset only product entries (keep articles and looks)
+        data["posted"] = {k: v for k, v in data.get("posted", {}).items()
+                         if k.startswith("article_") or k.startswith("look_")}
         tracker.save(data)
         print("[bot] Tracker reset — restarting product cycle")
         unposted = all_products
 
-    # Sort by lastmod desc (newest first)
+    # Pick from the 100 newest, shuffled — prevents always retrying the same failures
     unposted.sort(key=lambda x: x.get("lastmod", ""), reverse=True)
+    pool = unposted[:100]
+    random.shuffle(pool)
+    candidates = pool[:10]
 
-    # Try up to 10 candidates until one posts successfully
     format_index = run_number % 10
-    for entry in unposted[:10]:
+    for entry in candidates:
         pid = entry["id"]
         print(f"[bot] Fetching product: {pid}")
 
