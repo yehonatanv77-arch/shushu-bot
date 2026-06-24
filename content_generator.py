@@ -122,7 +122,7 @@ RULES:
 - Never use: "מהמם", "מדהים", "חייבים", "עכשיו!", "הזדמנות!", "אל תפספסו"
 - Do NOT include any URL or link anywhere
 
-ASSIGNED STORYTELLING FORMAT: {format_name}
+ASSIGNED FORMAT: {format_name}
 {format_instruction}
 
 PRODUCT DATA:
@@ -133,28 +133,12 @@ Sizes: {sizes}
 Description: {description}
 Gender: {gender}
 
-REQUIRED STRUCTURE — output exactly in this order:
-
-[Part 1 — STORYTELLING]
-2-4 lines using the assigned format above. Conversational, authentic Hebrew. 1 emoji max.
-
-[blank line]
-
-[Part 2 — DETAILS]
-Exactly 3-4 bullet lines using this symbol: •
-Always include: brand, price, sizes.
-Add 1 more relevant detail (color options / material / fit / style tip).
-Example format:
-• מותג: Ralph Lauren
-• מחיר: {price}
-• מידות: {sizes}
-• [one more relevant detail]
-
-[blank line]
-
-[Part 3 — CTA]
-One short punchy Hebrew line that creates desire, ending with 👇
-Example: "שווה להציץ 👇" / "תראו בעצמכם 👇" / "הפריט מדבר בעד עצמו 👇"
+Write the post freely in the assigned format (2-4 lines, 1 emoji max).
+Then add a blank line and exactly 3-4 bullet lines:
+• מותג: [brand]
+• מחיר: [price]
+• מידות: [sizes]
+• [one extra relevant detail — color options / material / fit]
 
 Return ONLY the post text. Nothing else."""
 
