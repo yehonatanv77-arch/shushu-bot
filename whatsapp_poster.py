@@ -4,7 +4,7 @@ Runs alongside Telegram — same content, same timing.
 """
 
 import os
-import requests
+import httpx
 
 EVOLUTION_URL = os.environ.get("EVOLUTION_API_URL", "").rstrip("/")
 EVOLUTION_KEY = os.environ.get("EVOLUTION_API_KEY", "")
@@ -28,7 +28,7 @@ def send_text_to_group(text: str) -> bool:
         "text": text,
     }
     try:
-        resp = requests.post(url, json=payload, headers=_headers(), timeout=15)
+        resp = httpx.post(url, json=payload, headers=_headers(), timeout=15)
         if resp.status_code in (200, 201):
             print("[whatsapp] ✅ Sent to group")
             return True
@@ -53,7 +53,7 @@ def send_image_to_group(image_url: str, caption: str) -> bool:
         "caption": caption,
     }
     try:
-        resp = requests.post(url, json=payload, headers=_headers(), timeout=15)
+        resp = httpx.post(url, json=payload, headers=_headers(), timeout=15)
         if resp.status_code in (200, 201):
             print("[whatsapp] ✅ Image sent to group")
             return True
