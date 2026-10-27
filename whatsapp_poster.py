@@ -31,21 +31,14 @@ def _discover_instance() -> str:
         status = inst.get("connectionStatus") or inst.get("status") or inst.get("state") or ""
         if name:
             names.append((name, status))
-    print(f"[whatsapp] Instances on server: {[n for n, _ in names]}")
-    for name, status in names:
-        if status == "open":
-            return name
-    return names[0][0] if names else ""
+    print(f"[whatsapp] Configured instance not found. Instances on server: {names}")
+    return ""
 
 
 def _post(endpoint: str, payload: dict) -> httpx.Response:
-    global INSTANCE
     resp = httpx.post(f"{EVOLUTION_URL}/message/{endpoint}/{INSTANCE}", json=payload, headers=_headers(), timeout=30)
     if resp.status_code == 404 and "instance does not exist" in resp.text:
-        found = _discover_instance()
-        if found and found != INSTANCE:
-            INSTANCE = found
-            resp = httpx.post(f"{EVOLUTION_URL}/message/{endpoint}/{INSTANCE}", json=payload, headers=_headers(), timeout=30)
+        _discover_instance()
     return resp
 
 
