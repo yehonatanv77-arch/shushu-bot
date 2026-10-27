@@ -16,6 +16,7 @@ sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 from scraper import fetch_sitemap, fetch_product, fetch_articles, fetch_article, fetch_today_look
 from content_generator import generate_post, generate_article_post, generate_daily_look_post
 from telegram_poster import post_product, send_photo, send_text
+from whatsapp_poster import post_product_to_whatsapp, send_text_to_group
 import tracker
 
 # Every N runs, post an article instead of a product (0 = disable articles)
@@ -163,6 +164,8 @@ def do_product(run_number: int):
         if success:
             tracker.mark_posted(pid, entry["url"], entry["lastmod"], [])
             print(f"[bot] ✅ Product posted!")
+            # Also post to WhatsApp group (non-blocking — failure doesn't affect Telegram)
+            post_product_to_whatsapp(product.images or [], post_text, buy_url)
             return True
 
         print("[bot] ❌ Telegram failed, trying next product")
