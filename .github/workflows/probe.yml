@@ -15,6 +15,8 @@ jobs:
           EVOLUTION_API_URL: ${{ secrets.EVOLUTION_API_URL }}
           EVOLUTION_API_KEY: ${{ secrets.EVOLUTION_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_BOT_TOKEN: dry-run
+          TELEGRAM_CHANNEL_ID: dry-run
           EVOLUTION_INSTANCE: ${{ secrets.EVOLUTION_INSTANCE }}
           WHATSAPP_GROUP_JID: ${{ secrets.WHATSAPP_GROUP_JID }}
           PYTHONPATH: .
