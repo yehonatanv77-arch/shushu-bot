@@ -17,7 +17,12 @@ SEASON_SLUGS = {
                "sweaters-and-knitwear", "backpacks"},
 }
 
-SEASON_HE = {"winter": "חורף", "spring": "אביב", "summer": "קיץ", "autumn": "סתיו"}
+# Items that make no sense in a given season (kept out of event lists)
+SUMMER_ONLY = {"sandals", "slides", "swimwear", "shorts", "tank-tops", "basket-and-straw-bags"}
+WINTER_ONLY = {"jackets", "boots", "sweaters-and-knitwear", "scarves", "hoodies", "sweatshirts", "slippers"}
+OFF_SEASON = {"winter": SUMMER_ONLY, "autumn": SUMMER_ONLY, "summer": WINTER_ONLY, "spring": set()}
+
+SEASON_HE ={"winter": "חורף", "spring": "אביב", "summer": "קיץ", "autumn": "סתיו"}
 
 # Our supplier gives no coupons, so events are framed around curated lists, never discounts.
 # Fixed-date events: (month, day, name, hint for the copy, price cap for the event list in ILS)

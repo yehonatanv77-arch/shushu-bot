@@ -382,16 +382,19 @@ Address members in plural (אתם). Hebrew only, no English words except brand n
 At most 1 emoji, no em dashes, no hashtags, no links. Return only the opening."""
 
 
-def _event_items(cap: int, n: int = 8) -> list[dict]:
+def _event_items(cap: int, now: datetime, n: int = 8) -> list[dict]:
+    _load_categories()
+    off = seasons.OFF_SEASON[seasons.season(now.date())]
     r = httpx.get(
         f"{SUPABASE_URL}/rest/v1/products",
         headers=HEADERS,
-        params={"select": "id,name,name_en,price", "is_active": "eq.true", "price": f"lte.{cap}",
+        params={"select": "id,name,name_en,price,category_id", "is_active": "eq.true", "price": f"lte.{cap}",
                 "order": "updated_at.desc", "limit": "150"},
         timeout=30,
     )
     r.raise_for_status()
-    items = [p for p in r.json() if (p.get("name") or p.get("name_en")) and p.get("price")]
+    items = [p for p in r.json() if (p.get("name") or p.get("name_en")) and p.get("price")
+             and _category_slugs.get(p.get("category_id") or "", "") not in off]
     return random.sample(items, min(n, len(items)))
 
 
@@ -400,7 +403,7 @@ def _event_post(now: datetime, source: str, early: bool) -> str:
     data = tracker.load()
     lst = data.get("event_list") or {}
     if lst.get("date") != now.date().isoformat():
-        lst = {"date": now.date().isoformat(), "items": _event_items(cap)}
+        lst = {"date": now.date().isoformat(), "items": _event_items(cap, now)}
         data["event_list"] = lst
         tracker.save(data)
     early_line = ("Mention that this group gets the list an hour before everyone else."
