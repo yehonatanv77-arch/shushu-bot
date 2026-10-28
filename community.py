@@ -51,7 +51,8 @@ EVENT_LIST_WA_HOUR = 12  # event day: the WhatsApp group gets the list an early 
 EVENT_LIST_TG_HOUR = 14
 
 # WhatsApp product slots; a community post scheduled for the same hour takes the slot
-WA_PRODUCT_HOURS = (13, 18)
+WA_PRODUCT_HOURS = tuple(range(10, 20))  # 10 product posts a day, 10:00-19:00
+ALI_HOURS = (11, 15, 19)  # "המציאה של עלי" takes these product slots
 
 
 def _event_tomorrow(now: datetime):
@@ -65,6 +66,8 @@ def now_il() -> datetime:
 
 def whatsapp_product_slot(now: datetime) -> bool:
     if now.hour == EVENT_HOUR and (_event_tomorrow(now) or seasons.event_today(now.date())):
+        return False
+    if now.hour == EVENT_LIST_WA_HOUR and seasons.event_today(now.date()):
         return False
     return now.hour in WA_PRODUCT_HOURS and (now.weekday(), now.hour) not in SCHEDULE
 

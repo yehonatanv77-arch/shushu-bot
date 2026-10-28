@@ -19,6 +19,7 @@ from telegram_poster import post_product, send_photo, send_text
 from whatsapp_poster import post_product_to_whatsapp, send_text_to_group
 import tracker
 import community
+import ali_post
 
 # Every N runs, post an article instead of a product (0 = disable articles)
 ARTICLE_EVERY_N_RUNS = int(os.environ.get("ARTICLE_EVERY_N_RUNS", "4"))
@@ -61,6 +62,30 @@ def do_daily_look():
 
     print("[bot] ❌ Daily look post failed")
     return False
+
+
+def do_ali():
+    """Posts one AliExpress find to Telegram (and WhatsApp in its slot)."""
+    print("[bot] Mode: ALIEXPRESS")
+    try:
+        post = ali_post.make_post()
+    except Exception as e:
+        print(f"[bot] AliExpress failed: {e}")
+        return False
+    if not post:
+        print("[bot] No AliExpress item fit")
+        return False
+    print(f"[bot] Preview:\n{post['text'][:250]}...")
+    if not post_product([post["image"]] if post["image"] else [], post["text"], post["link"]):
+        print("[bot] ❌ AliExpress post failed")
+        return False
+    data = tracker.load()
+    data.setdefault("ali_posted", {})[post["id"]] = community.now_il().isoformat()
+    tracker.save(data)
+    print("[bot] ✅ AliExpress find posted!")
+    if community.whatsapp_product_slot(community.now_il()):
+        post_product_to_whatsapp([post["image"]] if post["image"] else [], post["text"], post["link"])
+    return True
 
 
 def should_post_article(run_number: int) -> bool:
@@ -225,7 +250,9 @@ def run():
 
     print(f"[bot] Run #{run_number}")
 
-    if should_post_article(run_number):
+    if community.now_il().hour in community.ALI_HOURS and do_ali():
+        pass
+    elif should_post_article(run_number):
         success = do_article()
         if not success:
             # Fallback to product if article fails
