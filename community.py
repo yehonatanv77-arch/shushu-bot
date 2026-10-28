@@ -315,7 +315,8 @@ Pick one concrete trend that fits the season (a style, color, fabric or item) an
 Then present these 3 items as the way to get the look, one short line each, using the exact names below:
 {products}
 Address members in plural (אתם), never feminine-only (אתן). Hebrew only, no English words except brand names. No markdown, no asterisks.
-Rules: open with a short catchy title line, at most 2 emojis, no em dashes, no hashtags, no links (links are added after).
+Write simple, correct everyday Hebrew like a stylish friend. No made-up slang, no transliterated foreign phrases, no word games.
+Rules: open with a title line "טרנד השבוע: " followed by the trend name in plain words, at most 2 emojis, no em dashes, no hashtags, no links (links are added after).
 Return only the post."""
 
 
