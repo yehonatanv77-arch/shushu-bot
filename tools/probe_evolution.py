@@ -1,7 +1,9 @@
 import sys
 sys.stdout.reconfigure(encoding="utf-8")
-import aliexpress
-raw = aliexpress._call("aliexpress.affiliate.category.get")
-cats = raw["aliexpress_affiliate_category_get_response"]["resp_result"]["result"]["categories"]["category"]
-for c in cats:
-    print("CAT", c.get("category_id"), c.get("parent_category_id", "-"), c.get("category_name"))
+import ali_post, tracker
+tracker.save = lambda data: None  # dry run: nothing is saved or sent
+for n in range(3):
+    p = ali_post.make_post()
+    print(f"===== SAMPLE {n+1} ({p and p['label']})")
+    if p:
+        print(p["text"]); print("IMAGE", p["image"]); print("LINK", p["link"][:60])

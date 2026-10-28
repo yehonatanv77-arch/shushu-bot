@@ -19,6 +19,38 @@ TRACKING_ID = os.environ.get("ALIEXPRESS_TRACKING_ID", "").strip() or "default"
 MIN_RATING = 95.0  # positive feedback %, roughly 4.7+ stars
 MIN_ORDERS = 300
 
+# Fashion searches per season: (AliExpress category id, keywords, what it is in Hebrew)
+SEASON_QUERIES = {
+    "autumn": [
+        ("200000796", "women jacket", "ז'קט לנשים"), ("200000795", "men jacket", "ז'קט לגברים"),
+        ("200000373", "women knit sweater", "סוודר לנשים"), ("201236604", "men knit sweater", "סוודר לגברים"),
+        ("200000348", "women oversized hoodie", "קפוצ'ון לנשים"), ("200000344", "men hoodie", "קפוצ'ון לגברים"),
+        ("200133142", "women ankle boots", "מגפונים לנשים"), ("200131145", "men leather boots", "מגפיים לגברים"),
+        ("201336907", "women shoulder bag", "תיק לנשים"), ("200000399", "women scarf", "צעיף"),
+        ("1509", "women gold earrings", "עגילים"), ("200000366", "women wide leg pants", "מכנסיים רחבים"),
+    ],
+    "winter": [
+        ("200000796", "women wool coat", "מעיל לנשים"), ("200000795", "men winter jacket", "מעיל לגברים"),
+        ("200128142", "women puffer jacket", "פוך לנשים"), ("200000373", "women knit sweater", "סוודר לנשים"),
+        ("201236604", "men knit sweater", "סוודר לגברים"), ("200133142", "women boots", "מגפיים לנשים"),
+        ("200131145", "men boots", "מגפיים לגברים"), ("200000399", "women scarf", "צעיף"),
+        ("200000402", "beanie hat", "כובע גרב"), ("201336907", "women shoulder bag", "תיק לנשים"),
+        ("1509", "women gold jewelry", "תכשיטים"),
+    ],
+    "spring": [
+        ("200000347", "women midi dress", "שמלה"), ("201303001", "women blouse", "חולצה לנשים"),
+        ("202235806", "men linen shirt", "חולצה לגברים"), ("200133142", "women loafers", "לופרים לנשים"),
+        ("201336907", "women shoulder bag", "תיק לנשים"), ("200000440", "sunglasses", "משקפי שמש"),
+        ("1509", "women gold jewelry", "תכשיטים"), ("200000366", "women wide leg pants", "מכנסיים רחבים"),
+    ],
+    "summer": [
+        ("200000347", "women summer dress", "שמלת קיץ"), ("200000778", "women crop top", "טופ"),
+        ("200000779", "men t-shirt oversized", "טישרט לגברים"), ("200000367", "women linen shorts", "שורטס"),
+        ("200133142", "women sandals", "סנדלים"), ("201296801", "straw beach bag", "תיק חוף"),
+        ("200000440", "sunglasses", "משקפי שמש"), ("1509", "women gold jewelry", "תכשיטים"),
+    ],
+}
+
 # Never surface knockoffs of real brands
 BRAND_WORDS = re.compile(
     r"balenciaga|gucci|prada|chanel|dior|louis|vuitton|lv\b|hermes|fendi|versace|celine|loewe|"
@@ -59,7 +91,7 @@ def _rating(p: dict) -> float:
         return 0.0
 
 
-def search(keywords: str, page_size: int = 50) -> list[dict]:
+def search(keywords: str, category_id: str = "", page_size: int = 50) -> list[dict]:
     """Returns clean, well-rated items for the keywords, best sellers first."""
     if not (APP_KEY and APP_SECRET):
         print("[ali] Missing config, skipping")
@@ -67,6 +99,7 @@ def search(keywords: str, page_size: int = 50) -> list[dict]:
     data = _call(
         "aliexpress.affiliate.product.query",
         keywords=keywords,
+        **({"category_ids": category_id} if category_id else {}),
         page_size=page_size,
         sort="LAST_VOLUME_DESC",
         target_currency="ILS",
