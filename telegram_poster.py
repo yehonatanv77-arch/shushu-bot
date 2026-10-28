@@ -118,3 +118,28 @@ def post_product(images: list[str], caption: str, buy_url: str = "") -> bool:
         result = send_text(caption, buy_url)
 
     return result is not None
+
+
+def send_poll(question: str, options: list[str]) -> Optional[dict]:
+    payload = {
+        "chat_id": CHANNEL_ID,
+        "question": question,
+        "options": [{"text": o} for o in options],
+        "is_anonymous": True,
+    }
+    with httpx.Client(timeout=30) as client:
+        data = client.post(f"{BASE}/sendPoll", json=payload).json()
+    if not data.get("ok"):
+        print(f"[telegram] sendPoll error: {data}")
+        return None
+    return data["result"]
+
+
+def stop_poll(message_id: int) -> Optional[dict]:
+    """Closes the poll and returns it with final vote counts."""
+    with httpx.Client(timeout=30) as client:
+        data = client.post(f"{BASE}/stopPoll", json={"chat_id": CHANNEL_ID, "message_id": message_id}).json()
+    if not data.get("ok"):
+        print(f"[telegram] stopPoll error: {data}")
+        return None
+    return data["result"]

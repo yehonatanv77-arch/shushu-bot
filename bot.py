@@ -18,6 +18,7 @@ from content_generator import generate_post, generate_article_post, generate_dai
 from telegram_poster import post_product, send_photo, send_text
 from whatsapp_poster import post_product_to_whatsapp, send_text_to_group
 import tracker
+import community
 
 # Every N runs, post an article instead of a product (0 = disable articles)
 ARTICLE_EVERY_N_RUNS = int(os.environ.get("ARTICLE_EVERY_N_RUNS", "4"))
@@ -97,7 +98,8 @@ def do_article():
     if result is not None:
         tracker.mark_posted(f"article_{entry['id']}", entry["url"], entry["lastmod"], [])
         print("[bot] ✅ Article posted!")
-        post_product_to_whatsapp([article.cover_image] if article.cover_image else [], post_text)
+        if community.whatsapp_product_slot(community.now_il()):
+            post_product_to_whatsapp([article.cover_image] if article.cover_image else [], post_text)
         return True
 
     print("[bot] ❌ Article post failed")
@@ -131,6 +133,14 @@ def do_product(run_number: int):
     pool = unposted[:100]
     random.shuffle(pool)
     candidates = pool[:10]
+
+    fav = community.favorite_brand()
+    if fav and random.random() < 0.5:
+        fav_items = [p for p in unposted if community.brand_of(p.get("name", "")) == fav or p.get("brand", "") == fav]
+        random.shuffle(fav_items)
+        if fav_items:
+            print(f"[bot] Boosting poll winner: {fav} ({len(fav_items)} unposted)")
+            candidates = fav_items[:10] + candidates
 
     format_index = run_number % 10
     for entry in candidates:
@@ -166,8 +176,8 @@ def do_product(run_number: int):
         if success:
             tracker.mark_posted(pid, entry["url"], entry["lastmod"], [])
             print(f"[bot] ✅ Product posted!")
-            # Also post to WhatsApp group (non-blocking — failure doesn't affect Telegram)
-            post_product_to_whatsapp(product.images or [], post_text, buy_url)
+            if community.whatsapp_product_slot(community.now_il()):
+                post_product_to_whatsapp(product.images or [], post_text, buy_url)
             return True
 
         print("[bot] ❌ Telegram failed, trying next product")
@@ -180,6 +190,11 @@ def run():
     print(f"\n{'='*50}")
     print(f"SHUSHU Bot — {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}")
     print("="*50)
+
+    hour = community.now_il().hour
+    if not 9 <= hour <= 23:
+        print(f"[bot] Outside posting hours ({hour}:00 IL), skipping")
+        return
 
     # Load and increment run counter
     data = tracker.load()
@@ -197,6 +212,7 @@ def run():
     else:
         do_product(run_number)
 
+    community.run_scheduled()
     print(f"[bot] Done.")
 
 

@@ -98,3 +98,20 @@ def post_product_to_whatsapp(images: list, text: str, buy_url: str = "") -> bool
     if images:
         return send_image_to_group(images[0], full_text)
     return send_text_to_group(full_text)
+
+
+def send_poll_to_group(question: str, options: list[str]) -> bool:
+    if not all([EVOLUTION_URL, EVOLUTION_KEY, GROUP_JID]):
+        print("[whatsapp] Missing config — skipping")
+        return False
+    payload = {"number": GROUP_JID, "name": question, "selectableCount": 1, "values": options}
+    try:
+        resp = _post("sendPoll", payload)
+        if resp.status_code in (200, 201):
+            print("[whatsapp] ✅ Poll sent to group")
+            return True
+        print(f"[whatsapp] ❌ Error {resp.status_code}: {resp.text[:200]}")
+        return False
+    except Exception as e:
+        print(f"[whatsapp] ❌ Exception: {e}")
+        return False
