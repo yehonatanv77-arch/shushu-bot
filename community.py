@@ -81,6 +81,7 @@ def favorite_brand() -> str:
 
 
 # Comeback poll in the WhatsApp group: option -> root category slugs on the site
+CATEGORY_POLL_MIN_VOTES = 15
 CATEGORY_POLL_QUESTION = "מה הכי מעניין אתכם לראות כאן?"
 CATEGORY_POLL_OPTIONS = {
     "נעליים וסניקרס": {"shoes"},
@@ -132,7 +133,8 @@ def refresh_category_pref(now: datetime):
         return
     poll_id = pref.get("wa_id") or find_poll_id(CATEGORY_POLL_QUESTION)
     votes = get_poll_votes(poll_id) if poll_id else {}
-    winner = max(votes, key=votes.get) if votes else ""
+    # Until enough people voted, keep a balanced mix instead of pushing one category
+    winner = max(votes, key=votes.get) if sum(votes.values()) >= CATEGORY_POLL_MIN_VOTES else ""
     data["category_pref"] = {"wa_id": poll_id, "votes": votes, "winner": winner,
                              "date": now.date().isoformat()}
     tracker.save(data)
@@ -147,6 +149,25 @@ def matches_favorite_category(entry: dict) -> bool:
     if "luxury" in targets:
         return brand_of(entry.get("name", "")) in LUXURY_BRANDS
     return _root_slug(entry.get("category_id", "")) in targets
+
+
+def root_of(entry: dict) -> str:
+    try:
+        return _root_slug(entry.get("category_id", ""))
+    except Exception:
+        return ""
+
+
+def recent_roots(n: int = 2) -> list[str]:
+    return (tracker.load().get("recent_roots") or [])[-n:]
+
+
+def note_root(root: str):
+    if not root:
+        return
+    data = tracker.load()
+    data["recent_roots"] = ((data.get("recent_roots") or []) + [root])[-10:]
+    tracker.save(data)
 
 
 def favorite_category() -> str:

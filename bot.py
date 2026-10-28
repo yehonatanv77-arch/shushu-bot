@@ -188,6 +188,10 @@ def do_product(run_number: int):
             print(f"[bot] Boosting seasonal items ({len(season_items)} in pool)")
             candidates = season_items[:10] + candidates
 
+    # Mix: items from a category different from the last two posts go first
+    recent = community.recent_roots()
+    candidates.sort(key=lambda p: community.root_of(p) in recent)
+
     format_index = run_number % 10
     for entry in candidates:
         pid = entry["id"]
@@ -221,6 +225,7 @@ def do_product(run_number: int):
 
         if success:
             tracker.mark_posted(pid, entry["url"], entry["lastmod"], [])
+            community.note_root(community.root_of(entry))
             print(f"[bot] ✅ Product posted!")
             if community.whatsapp_product_slot(community.now_il()):
                 post_product_to_whatsapp(product.images or [], post_text, buy_url)
