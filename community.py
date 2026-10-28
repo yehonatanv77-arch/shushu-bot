@@ -19,7 +19,7 @@ import httpx
 import tracker
 from scraper import SUPABASE_URL, HEADERS
 from telegram_poster import send_text, send_poll, stop_poll
-from whatsapp_poster import send_text_to_group, send_poll_to_group, get_poll_votes
+from whatsapp_poster import send_text_to_group, send_poll_to_group, get_poll_votes, find_poll_id
 
 IL = ZoneInfo("Asia/Jerusalem")
 TELEGRAM_LINK = "https://t.me/shusu_secret"
@@ -51,6 +51,66 @@ def favorite_brand() -> str:
     if fav.get("until", "") >= now_il().date().isoformat():
         return fav.get("brand", "")
     return ""
+
+
+# Comeback poll in the WhatsApp group: option -> root category slugs on the site
+CATEGORY_POLL_QUESTION = "מה הכי מעניין אתכם לראות כאן?"
+CATEGORY_POLL_OPTIONS = {
+    "נעליים וסניקרס": {"shoes"},
+    "תיקים ואקססוריז": {"bags", "accessories"},
+    "בגדים": {"clothing"},
+    "יוקרה במחיר נגיש": {"luxury"},
+}
+LUXURY_BRANDS = {
+    "Loewe", "Balenciaga", "Chanel", "Gucci", "Prada", "Miu Miu", "Dior", "Louis Vuitton",
+    "Saint Laurent", "Valentino", "Bottega Veneta", "Celine", "Burberry", "Versace", "Fendi",
+    "Hermes", "Givenchy", "Moncler", "Patek Philippe", "Rolex", "Cartier", "Alexander McQueen",
+    "Rick Owens", "Jacquemus", "Golden Goose", "Marc Jacobs",
+}
+
+_category_roots = {}
+
+
+def _root_slug(category_id: str) -> str:
+    if not _category_roots:
+        r = httpx.get(f"{SUPABASE_URL}/rest/v1/categories", headers=HEADERS,
+                      params={"select": "id,slug,parent_id"}, timeout=30)
+        r.raise_for_status()
+        cats = {c["id"]: c for c in r.json()}
+        for cid, c in cats.items():
+            while c.get("parent_id") in cats:
+                c = cats[c["parent_id"]]
+            _category_roots[cid] = c["slug"]
+    return _category_roots.get(category_id, "")
+
+
+def refresh_category_pref(now: datetime):
+    """Once a day, re-reads the comeback poll and stores the leading option."""
+    data = tracker.load()
+    pref = data.get("category_pref") or {}
+    if pref.get("date") == now.date().isoformat():
+        return
+    poll_id = pref.get("wa_id") or find_poll_id(CATEGORY_POLL_QUESTION)
+    votes = get_poll_votes(poll_id) if poll_id else {}
+    winner = max(votes, key=votes.get) if votes else ""
+    data["category_pref"] = {"wa_id": poll_id, "votes": votes, "winner": winner,
+                             "date": now.date().isoformat()}
+    tracker.save(data)
+    print(f"[community] Category poll votes: {votes}")
+
+
+def matches_favorite_category(entry: dict) -> bool:
+    winner = (tracker.load().get("category_pref") or {}).get("winner", "")
+    targets = CATEGORY_POLL_OPTIONS.get(winner)
+    if not targets:
+        return False
+    if "luxury" in targets:
+        return brand_of(entry.get("name", "")) in LUXURY_BRANDS
+    return _root_slug(entry.get("category_id", "")) in targets
+
+
+def favorite_category() -> str:
+    return (tracker.load().get("category_pref") or {}).get("winner", "")
 
 
 def _done_today(action: str, now: datetime) -> bool:
@@ -195,7 +255,11 @@ ACTIONS = {"poll": do_poll, "question": do_question, "poll_close": do_poll_close
 
 def run_scheduled(now: datetime | None = None):
     now = now or now_il()
-    action = SCHEDULE.get((now.weekday(), now.hour))
+    try:
+        refresh_category_pref(now)
+    except Exception as e:
+        print(f"[community] ❌ category refresh failed: {e}")
+    action =SCHEDULE.get((now.weekday(), now.hour))
     if now.hour == INVITE_HOUR:
         action = "invite"
     if not action or _done_today(action, now):

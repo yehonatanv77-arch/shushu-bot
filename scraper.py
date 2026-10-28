@@ -53,7 +53,7 @@ def fetch_sitemap() -> list[dict]:
                 f"{SUPABASE_URL}/rest/v1/products",
                 headers={**HEADERS, "Range-Unit": "items", "Range": f"{offset}-{offset+limit-1}"},
                 params={
-                    "select": "id,updated_at,brand,name_en,name",
+                    "select": "id,updated_at,brand,name_en,name,category_id",
                     "is_active": "eq.true",
                     "order": "updated_at.desc",
                 },
@@ -69,6 +69,7 @@ def fetch_sitemap() -> list[dict]:
                     "lastmod": p.get("updated_at", ""),
                     "brand": p.get("brand") or "",
                     "name": p.get("name_en") or p.get("name") or "",
+                    "category_id": p.get("category_id") or "",
                 })
             if len(batch) < limit:
                 break

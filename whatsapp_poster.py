@@ -118,6 +118,31 @@ def send_poll_to_group(question: str, options: list[str]) -> str:
         return ""
 
 
+def find_poll_id(question: str, max_pages: int = 10) -> str:
+    """Finds the id of the newest group poll with this question ('' if not found)."""
+    for page in range(1, max_pages + 1):
+        try:
+            resp = httpx.post(
+                f"{EVOLUTION_URL}/chat/findMessages/{INSTANCE}",
+                headers=_headers(),
+                json={"where": {"key": {"remoteJid": GROUP_JID}}, "page": page, "offset": 100},
+                timeout=30,
+            )
+            block = resp.json().get("messages", {})
+        except Exception as e:
+            print(f"[whatsapp] Poll lookup failed: {e}")
+            return ""
+        records = block.get("records", [])
+        for m in records:
+            msg = m.get("message") or {}
+            poll = msg.get("pollCreationMessageV3") or msg.get("pollCreationMessage") or {}
+            if poll.get("name") == question:
+                return (m.get("key") or {}).get("id", "")
+        if page >= int(block.get("pages") or 1) or not records:
+            break
+    return ""
+
+
 def get_poll_votes(poll_id: str, max_pages: int = 10) -> dict:
     """Counts votes for a group poll: each voter's latest choice wins."""
     latest = {}

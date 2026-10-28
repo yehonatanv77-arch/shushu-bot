@@ -141,6 +141,15 @@ def do_product(run_number: int):
         if fav_items:
             print(f"[bot] Boosting poll winner: {fav} ({len(fav_items)} unposted)")
             candidates = fav_items[:10] + candidates
+    elif community.favorite_category() and random.random() < 0.4:
+        try:
+            cat_items = [p for p in pool if community.matches_favorite_category(p)]
+        except Exception as e:
+            print(f"[bot] Category boost skipped: {e}")
+            cat_items = []
+        if cat_items:
+            print(f"[bot] Boosting poll category: {community.favorite_category()} ({len(cat_items)} in pool)")
+            candidates = cat_items[:10] + candidates
 
     format_index = run_number % 10
     for entry in candidates:
