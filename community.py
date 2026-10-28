@@ -19,7 +19,7 @@ import httpx
 import tracker
 from scraper import SUPABASE_URL, HEADERS
 from telegram_poster import send_text, send_poll, stop_poll
-from whatsapp_poster import send_text_to_group, send_poll_to_group
+from whatsapp_poster import send_text_to_group, send_poll_to_group, get_poll_votes
 
 IL = ZoneInfo("Asia/Jerusalem")
 TELEGRAM_LINK = "https://t.me/shusu_secret"
@@ -104,10 +104,11 @@ def do_poll(now: datetime):
         return
     options = random.sample(brands, 4)
     tg = send_poll(POLL_QUESTION, options)
-    send_poll_to_group(POLL_QUESTION, options)
+    wa_id = send_poll_to_group(POLL_QUESTION, options)
     _mark_done("poll", now, brand_poll={
         "message_id": tg["message_id"] if tg else None,
         "options": options,
+        "wa_id": wa_id,
         "date": now.date().isoformat(),
     })
     print(f"[community] ✅ Poll sent: {options}")
@@ -115,14 +116,18 @@ def do_poll(now: datetime):
 
 def do_poll_close(now: datetime):
     poll = tracker.load().get("brand_poll") or {}
-    if not poll.get("message_id"):
+    if not poll.get("message_id") and not poll.get("wa_id"):
         print("[community] No open poll")
         _mark_done("poll_close", now)
         return
-    result = stop_poll(poll["message_id"])
-    if not result:
-        return
-    votes = {o["text"]: o["voter_count"] for o in result.get("options", [])}
+    votes = {o: 0 for o in poll.get("options", [])}
+    if poll.get("message_id"):
+        result = stop_poll(poll["message_id"])
+        for o in (result or {}).get("options", []):
+            votes[o["text"]] = votes.get(o["text"], 0) + o["voter_count"]
+    if poll.get("wa_id"):
+        for o, c in get_poll_votes(poll["wa_id"]).items():
+            votes[o] = votes.get(o, 0) + c
     print(f"[community] Poll votes: {votes}")
     if not votes or max(votes.values()) == 0:
         _mark_done("poll_close", now, brand_poll={})

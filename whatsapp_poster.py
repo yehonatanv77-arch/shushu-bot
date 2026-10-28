@@ -100,18 +100,54 @@ def post_product_to_whatsapp(images: list, text: str, buy_url: str = "") -> bool
     return send_text_to_group(full_text)
 
 
-def send_poll_to_group(question: str, options: list[str]) -> bool:
+def send_poll_to_group(question: str, options: list[str]) -> str:
+    """Sends a poll; returns its message id ('' on failure)."""
     if not all([EVOLUTION_URL, EVOLUTION_KEY, GROUP_JID]):
         print("[whatsapp] Missing config — skipping")
-        return False
+        return ""
     payload = {"number": GROUP_JID, "name": question, "selectableCount": 1, "values": options}
     try:
         resp = _post("sendPoll", payload)
         if resp.status_code in (200, 201):
             print("[whatsapp] ✅ Poll sent to group")
-            return True
+            return resp.json().get("key", {}).get("id", "") or "sent"
         print(f"[whatsapp] ❌ Error {resp.status_code}: {resp.text[:200]}")
-        return False
+        return ""
     except Exception as e:
         print(f"[whatsapp] ❌ Exception: {e}")
-        return False
+        return ""
+
+
+def get_poll_votes(poll_id: str, max_pages: int = 10) -> dict:
+    """Counts votes for a group poll: each voter's latest choice wins."""
+    latest = {}
+    for page in range(1, max_pages + 1):
+        try:
+            resp = httpx.post(
+                f"{EVOLUTION_URL}/chat/findMessages/{INSTANCE}",
+                headers=_headers(),
+                json={"where": {"key": {"remoteJid": GROUP_JID}}, "page": page, "offset": 100},
+                timeout=30,
+            )
+            data = resp.json()
+        except Exception as e:
+            print(f"[whatsapp] Vote fetch failed: {e}")
+            break
+        block = data.get("messages", {}) if isinstance(data, dict) else {}
+        records = block.get("records", [])
+        for m in records:
+            upd = (m.get("message") or {}).get("pollUpdateMessage")
+            if not upd or upd.get("pollCreationMessageKey", {}).get("id") != poll_id:
+                continue
+            key = m.get("key") or {}
+            voter = key.get("participant") or key.get("participantAlt") or key.get("remoteJid")
+            ts = int(m.get("messageTimestamp") or 0)
+            if voter not in latest or ts >= latest[voter][0]:
+                latest[voter] = (ts, upd.get("vote", {}).get("selectedOptions", []))
+        if page >= int(block.get("pages") or 1) or not records:
+            break
+    counts = {}
+    for _, options in latest.values():
+        for o in options:
+            counts[o] = counts.get(o, 0) + 1
+    return counts

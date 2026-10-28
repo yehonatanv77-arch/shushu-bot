@@ -16,4 +16,5 @@ jobs:
           EVOLUTION_API_KEY: ${{ secrets.EVOLUTION_API_KEY }}
           EVOLUTION_INSTANCE: ${{ secrets.EVOLUTION_INSTANCE }}
           WHATSAPP_GROUP_JID: ${{ secrets.WHATSAPP_GROUP_JID }}
+          PYTHONPATH: .
         run: python tools/probe_evolution.py ${{ inputs.mode }}
