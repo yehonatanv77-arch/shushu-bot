@@ -6,7 +6,7 @@ own=inst.get("ownerJid"); print("owner set:",bool(own))
 mode=sys.argv[1] if len(sys.argv)>1 else "read"
 if mode=="send":
     r=httpx.post(f"{U}/message/sendPoll/{I}",headers=H,json={"number":own.split("@")[0],"name":"בדיקת סקר SHUSHU","selectableCount":1,"values":["אפשרות א","אפשרות ב","אפשרות ג"]},timeout=30)
-    print("sendPoll",r.status_code,r.text[:300])
+    print("sendPoll",r.status_code)
 r=httpx.post(f"{U}/chat/findMessages/{I}",headers=H,json={"where":{"key":{"remoteJid":own}},"limit":50},timeout=30)
 d=r.json(); recs=d.get("messages",{}).get("records",[]) if isinstance(d,dict) else d
 print("count",len(recs), collections.Counter(m.get("messageType") for m in recs))

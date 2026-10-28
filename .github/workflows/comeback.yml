@@ -1,0 +1,17 @@
+name: WhatsApp comeback message
+on: workflow_dispatch
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install httpx==0.27.0
+      - env:
+          EVOLUTION_API_URL: ${{ secrets.EVOLUTION_API_URL }}
+          EVOLUTION_API_KEY: ${{ secrets.EVOLUTION_API_KEY }}
+          EVOLUTION_INSTANCE: ${{ secrets.EVOLUTION_INSTANCE }}
+          WHATSAPP_GROUP_JID: ${{ secrets.WHATSAPP_GROUP_JID }}
+          PYTHONPATH: .
+        run: python tools/send_comeback.py
