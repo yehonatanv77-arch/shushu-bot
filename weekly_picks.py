@@ -13,6 +13,7 @@ sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 import anthropic
 from telegram_poster import send_photo, send_text
+from whatsapp_poster import send_text_to_group
 
 SUPABASE_URL = "https://knilxqseqmwubqgjtfhn.supabase.co"
 ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuaWx4cXNlcW13dWJxZ2p0ZmhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyNjU3NTQsImV4cCI6MjA4NDg0MTc1NH0.NI9_kfrBKZuKgn_rY-jPJdLY7lsApDvgUuT26XFt6v0"
@@ -123,6 +124,7 @@ def run():
     result = send_text(post_text)
     if result:
         print("[weekly] ✅ Weekly picks posted!")
+        send_text_to_group(post_text)
     else:
         print("[weekly] ❌ Failed to post")
 

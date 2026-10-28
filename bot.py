@@ -52,6 +52,7 @@ def do_daily_look():
     if result is not None:
         tracker.mark_posted(look_key, f"https://shushu-secret.com", look.look_date, [])
         print("[bot] ✅ Daily look posted!")
+        post_product_to_whatsapp([look.model_image_url] if look.model_image_url else [], post_text)
         return True
 
     print("[bot] ❌ Daily look post failed")
@@ -96,6 +97,7 @@ def do_article():
     if result is not None:
         tracker.mark_posted(f"article_{entry['id']}", entry["url"], entry["lastmod"], [])
         print("[bot] ✅ Article posted!")
+        post_product_to_whatsapp([article.cover_image] if article.cover_image else [], post_text)
         return True
 
     print("[bot] ❌ Article post failed")
