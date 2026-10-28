@@ -5,6 +5,8 @@ Community actions, run from the hourly bot by Israel day and hour:
   Thu 13:00  fun seasonal poll (the WhatsApp group is read-only, members can only vote)
   Fri 13:00  close poll, announce winner, boost that brand for a week
   18:00 the day before a shopping event or holiday  heads-up message
+  Event day  hand-picked list under a price cap: WhatsApp 12:00 (early), Telegram 14:00.
+             No discount claims, our supplier gives no coupons.
   Daily 21:00  WhatsApp invite to the Telegram channel
 Each action runs at most once per day (keys under data["community"]).
 """
@@ -45,6 +47,8 @@ SCHEDULE = {
 }
 INVITE_HOUR = 21
 EVENT_HOUR = 18  # heads-up the evening before a shopping event / holiday
+EVENT_LIST_WA_HOUR = 12  # event day: the WhatsApp group gets the list an early hour first
+EVENT_LIST_TG_HOUR = 14
 
 # WhatsApp product slots; a community post scheduled for the same hour takes the slot
 WA_PRODUCT_HOURS = (13, 18)
@@ -60,7 +64,7 @@ def now_il() -> datetime:
 
 
 def whatsapp_product_slot(now: datetime) -> bool:
-    if now.hour == EVENT_HOUR and _event_tomorrow(now):
+    if now.hour == EVENT_HOUR and (_event_tomorrow(now) or seasons.event_today(now.date())):
         return False
     return now.hour in WA_PRODUCT_HOURS and (now.weekday(), now.hour) not in SCHEDULE
 
@@ -353,7 +357,8 @@ def do_trend(now: datetime):
 
 EVENT_PROMPT = """You write for SHUSHU, an Israeli fashion discovery community.
 Tomorrow is {name} ({hint}). Write a short heads-up message in natural casual Hebrew (2-4 lines):
-tell members it is tomorrow, give one practical tip, and say we will share the best finds here.
+tell members it is tomorrow, give one practical tip, and say that tomorrow at noon this group gets our hand-picked list first, an hour before everyone else.
+Never promise discounts, sales or coupons.
 Address members in plural (אתם), never feminine-only (אתן). Hebrew only, no English words except brand names. No markdown, no asterisks.
 At most 1 emoji, no em dashes, no hashtags, no links. Return only the message."""
 
@@ -367,6 +372,59 @@ def do_event(now: datetime):
     send_text_to_group(text)
     _mark_done("event", now)
     print(f"[community] ✅ Event heads-up: {ev[0]}")
+
+
+EVENT_LIST_PROMPT = """You write for SHUSHU, an Israeli fashion discovery community.
+Today is {name} ({hint}). Write a short opening (2-3 lines) in natural casual Hebrew for our hand-picked list of items under {cap} ₪.
+{early}
+Never promise discounts, sales or coupons; the value is our curation and the prices.
+Address members in plural (אתם). Hebrew only, no English words except brand names. No markdown, no asterisks.
+At most 1 emoji, no em dashes, no hashtags, no links. Return only the opening."""
+
+
+def _event_items(cap: int, n: int = 8) -> list[dict]:
+    r = httpx.get(
+        f"{SUPABASE_URL}/rest/v1/products",
+        headers=HEADERS,
+        params={"select": "id,name,name_en,price", "is_active": "eq.true", "price": f"lte.{cap}",
+                "order": "updated_at.desc", "limit": "150"},
+        timeout=30,
+    )
+    r.raise_for_status()
+    items = [p for p in r.json() if (p.get("name") or p.get("name_en")) and p.get("price")]
+    return random.sample(items, min(n, len(items)))
+
+
+def _event_post(now: datetime, source: str, early: bool) -> str:
+    name, hint, cap = seasons.event_today(now.date())
+    data = tracker.load()
+    lst = data.get("event_list") or {}
+    if lst.get("date") != now.date().isoformat():
+        lst = {"date": now.date().isoformat(), "items": _event_items(cap)}
+        data["event_list"] = lst
+        tracker.save(data)
+    early_line = ("Mention that this group gets the list an hour before everyone else."
+                  if early else "")
+    opening = _claude(EVENT_LIST_PROMPT.format(name=name, hint=hint, cap=cap, early=early_line), 200)
+    lines = [
+        f"• {p.get('name') or p.get('name_en')}, ₪{float(p['price']):.0f}\n"
+        f"{site_link('/product/' + p['id'], source, 'event')}"
+        for p in lst["items"]
+    ]
+    return f"{opening}\n\n" + "\n\n".join(lines)
+
+
+def do_event_list_wa(now: datetime):
+    post = _event_post(now, "whatsapp", early=True)
+    send_text_to_group(post)
+    _mark_done("event_list_wa", now)
+    print("[community] ✅ Event list sent to WhatsApp")
+
+
+def do_event_list_tg(now: datetime):
+    send_text(_event_post(now, "telegram", early=False))
+    _mark_done("event_list_tg", now)
+    print("[community] ✅ Event list sent to Telegram")
 
 
 INVITES = [
@@ -395,7 +453,8 @@ def do_invite(now: datetime):
 
 
 ACTIONS = {"poll": do_poll, "question": do_question, "fun_poll": do_fun_poll, "trend": do_trend,
-           "poll_close": do_poll_close, "invite": do_invite, "event": do_event}
+           "poll_close": do_poll_close, "invite": do_invite, "event": do_event,
+           "event_list_wa": do_event_list_wa, "event_list_tg": do_event_list_tg}
 
 
 def run_scheduled(now: datetime | None = None):
@@ -409,6 +468,11 @@ def run_scheduled(now: datetime | None = None):
         action = "invite"
     if now.hour == EVENT_HOUR and _event_tomorrow(now):
         action = "event"
+    if seasons.event_today(now.date()):
+        if now.hour == EVENT_LIST_WA_HOUR:
+            action = "event_list_wa"
+        elif now.hour == EVENT_LIST_TG_HOUR:
+            action = "event_list_tg"
     if not action or _done_today(action, now):
         return
     try:

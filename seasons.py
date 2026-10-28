@@ -19,20 +19,20 @@ SEASON_SLUGS = {
 
 SEASON_HE = {"winter": "חורף", "spring": "אביב", "summer": "קיץ", "autumn": "סתיו"}
 
-# Fixed-date events: (month, day, name, hint for the copy)
+# Our supplier gives no coupons, so events are framed around curated lists, never discounts.
+# Fixed-date events: (month, day, name, hint for the copy, price cap for the event list in ILS)
 EVENTS = [
-    (11, 11, "11.11", "יום הקניות הגדול של השנה באתרים הסיניים, הנחות חזקות לכמה שעות"),
-    (2, 14, "ולנטיין", "רעיונות למתנה לבן או בת הזוג"),
+    (11, 11, "11.11", "יום קניות גדול ברשת, הזדמנות להתחדש לחורף", 150),
+    (2, 14, "ולנטיין", "רעיונות למתנה לבן או בת הזוג", 250),
 ]
 
 # Events that move every year (Jewish holidays, Black Friday). Add the next year when it gets close.
 DATED_EVENTS = [
-    (date(2026, 11, 27), "בלאק פריידיי", "הנחות גדולות בכל האתרים, כדאי להכין רשימה מראש"),
-    (date(2026, 11, 30), "סייבר מאנדיי", "הזדמנות אחרונה למבצעי בלאק פריידיי"),
-    (date(2026, 12, 4), "חנוכה", "מתנות קטנות ושוות לחנוכה"),
-    (date(2027, 4, 21), "פסח", "לוקים לחג והתחדשות לאביב"),
-    (date(2027, 10, 1), "ראש השנה", "לוק לחג ומתנות לשנה החדשה"),
-    (date(2027, 11, 26), "בלאק פריידיי", "הנחות גדולות בכל האתרים, כדאי להכין רשימה מראש"),
+    (date(2026, 11, 27), "בלאק פריידיי", "יום הקניות הגדול של השנה, הזמן להשלים את הארון לחורף", 150),
+    (date(2026, 12, 4), "חנוכה", "מתנות קטנות ושוות לחנוכה", 150),
+    (date(2027, 4, 21), "פסח", "לוקים לחג והתחדשות לאביב", 200),
+    (date(2027, 10, 1), "ראש השנה", "לוק לחג ומתנות לשנה החדשה", 200),
+    (date(2027, 11, 26), "בלאק פריידיי", "יום הקניות הגדול של השנה, הזמן להשלים את הארון לחורף", 150),
 ]
 
 
@@ -47,17 +47,27 @@ def season(today: date) -> str:
     return "autumn"
 
 
+def _all_events(today: date):
+    out = list(DATED_EVENTS)
+    for month, day, name, hint, cap in EVENTS:
+        d = date(today.year, month, day)
+        out.append((d if d >= today else date(today.year + 1, month, day), name, hint, cap))
+    return out
+
+
 def upcoming_event(today: date, days: int = 7):
     """Returns (name, hint, days_left) for the nearest event within `days`, else None."""
     best = None
-    candidates = list(DATED_EVENTS)
-    for month, day, name, hint in EVENTS:
-        d = date(today.year, month, day)
-        candidates.append((d if d >= today else date(today.year + 1, month, day), name, hint))
-    for d, name, hint in candidates:
+    for d, name, hint, _ in _all_events(today):
         left = (d - today).days
-        if left < 0:
-            continue
-        if left <= days and (best is None or left < best[2]):
+        if 0 <= left <= days and (best is None or left < best[2]):
             best = (name, hint, left)
     return best
+
+
+def event_today(today: date):
+    """Returns (name, hint, price_cap) if an event is today, else None."""
+    for d, name, hint, cap in _all_events(today):
+        if d == today:
+            return name, hint, cap
+    return None
