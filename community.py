@@ -267,12 +267,13 @@ def _claude(prompt: str, max_tokens: int = 400) -> str:
         max_tokens=max_tokens,
         messages=[{"role": "user", "content": prompt}],
     )
-    return msg.content[0].text.strip().replace("—", ",").replace("–", ",")
+    return msg.content[0].text.strip().replace("—", ",").replace("–", ",").replace("**", "")
 
 
 FUN_POLL_PROMPT = """You write for SHUSHU, an Israeli fashion discovery community. Members cannot write in the WhatsApp group, they can only vote in polls.
 Create ONE fun, light poll in natural casual Hebrew that fits right now. {context}
 Ideas: this or that between two styles, what are you buying this season, budget per item, which trend should stay or go, what to wear to an upcoming event.
+Address members in plural (אתם), never feminine-only (אתן). Hebrew only, no English words except brand names. No markdown, no asterisks.
 Rules: question up to 12 words, 2 to 4 short options (up to 4 words each), at most 1 emoji in the question, no em dashes.
 Avoid repeating these recent questions: {recent}
 Return only JSON: {{"question": "...", "options": ["...", "..."]}}"""
@@ -313,6 +314,7 @@ Write a short "trend of the week" post in natural casual Hebrew. {context}
 Pick one concrete trend that fits the season (a style, color, fabric or item) and explain in 2-3 lines why it is in now and how to wear it.
 Then present these 3 items as the way to get the look, one short line each, using the exact names below:
 {products}
+Address members in plural (אתם), never feminine-only (אתן). Hebrew only, no English words except brand names. No markdown, no asterisks.
 Rules: open with a short catchy title line, at most 2 emojis, no em dashes, no hashtags, no links (links are added after).
 Return only the post."""
 
@@ -339,6 +341,7 @@ def do_trend(now: datetime):
 EVENT_PROMPT = """You write for SHUSHU, an Israeli fashion discovery community.
 Tomorrow is {name} ({hint}). Write a short heads-up message in natural casual Hebrew (2-4 lines):
 tell members it is tomorrow, give one practical tip, and say we will share the best finds here.
+Address members in plural (אתם), never feminine-only (אתן). Hebrew only, no English words except brand names. No markdown, no asterisks.
 At most 1 emoji, no em dashes, no hashtags, no links. Return only the message."""
 
 
