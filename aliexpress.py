@@ -133,3 +133,19 @@ def search(keywords: str, category_id: str = "", page_size: int = 50) -> list[di
             "link": p["promotion_link"],
         })
     return clean
+
+
+def short_link(product_id: str) -> str:
+    """Short affiliate link for one product ('' on failure)."""
+    try:
+        data = _call(
+            "aliexpress.affiliate.link.generate",
+            promotion_link_type=0,
+            source_values=f"https://www.aliexpress.com/item/{product_id}.html",
+            tracking_id=TRACKING_ID,
+        )
+        res = data["aliexpress_affiliate_link_generate_response"]["resp_result"]["result"]
+        return res["promotion_links"]["promotion_link"][0]["promotion_link"]
+    except Exception as e:
+        print(f"[ali] Short link failed: {e}")
+        return ""

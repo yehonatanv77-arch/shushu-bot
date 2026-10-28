@@ -61,5 +61,6 @@ def make_post(now: datetime | None = None) -> dict | None:
             continue
         it = items[idx]
         text = pick["post"].replace("{price}", str(it["price"]))
-        return {"text": text, "image": it["image"], "link": it["link"], "id": it["id"], "label": label}
+        link = aliexpress.short_link(it["id"]) or it["link"]
+        return {"text": text, "image": it["image"], "link": link, "id": it["id"], "label": label}
     return None
