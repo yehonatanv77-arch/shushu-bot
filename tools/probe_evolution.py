@@ -1,6 +1,13 @@
-import os, httpx
-from whatsapp_poster import get_poll_votes, EVOLUTION_URL, INSTANCE, GROUP_JID, _headers
-d=httpx.post(f"{EVOLUTION_URL}/chat/findMessages/{INSTANCE}",headers=_headers(),json={"where":{"key":{"remoteJid":GROUP_JID}},"limit":100},timeout=30).json()
-for m in d["messages"]["records"]:
-    if m.get("messageType")=="pollCreationMessageV3":
-        print("POLL", m["message"]["pollCreationMessageV3"]["name"], "VOTES", get_poll_votes(m["key"]["id"]))
+import sys
+sys.stdout.reconfigure(encoding="utf-8")
+import json
+import community
+from community import _claude, _context, _seasonal_products, now_il, FUN_POLL_PROMPT, TREND_PROMPT
+
+now = now_il()
+print("CONTEXT", _context(now))
+for _ in range(2):
+    print("FUN POLL", _claude(FUN_POLL_PROMPT.format(context=_context(now), recent="none"), 200))
+ps = _seasonal_products(now)
+names = [p.get("name") or p.get("name_en") for p in ps]
+print("TREND", _claude(TREND_PROMPT.format(context=_context(now), products="\n".join(f"- {n}" for n in names))))
