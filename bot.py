@@ -150,6 +150,15 @@ def do_product(run_number: int):
         if cat_items:
             print(f"[bot] Boosting poll category: {community.favorite_category()} ({len(cat_items)} in pool)")
             candidates = cat_items[:10] + candidates
+    elif random.random() < 0.3:
+        try:
+            season_items = [p for p in pool if community.matches_season(p)]
+        except Exception as e:
+            print(f"[bot] Season boost skipped: {e}")
+            season_items = []
+        if season_items:
+            print(f"[bot] Boosting seasonal items ({len(season_items)} in pool)")
+            candidates = season_items[:10] + candidates
 
     format_index = run_number % 10
     for entry in candidates:
