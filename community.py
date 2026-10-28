@@ -28,6 +28,12 @@ from whatsapp_poster import send_text_to_group, send_poll_to_group, get_poll_vot
 
 IL = ZoneInfo("Asia/Jerusalem")
 TELEGRAM_LINK = "https://t.me/shusu_secret"
+SITE = "https://shushu-secret.com"
+
+
+def site_link(path: str, source: str, campaign: str) -> str:
+    """Link to our own site, tagged so site analytics show which channel sent the visit."""
+    return f"{SITE}{path}?utm_source={source}&utm_medium=community&utm_campaign={campaign}"
 POLL_QUESTION = "איזה מותג להביא יותר בשבוע הבא?"
 
 # weekday: Mon=0 ... Sun=6
@@ -294,26 +300,34 @@ def do_fun_poll(now: datetime):
     print(f"[community] ✅ Fun poll: {question} {options}")
 
 
-def _seasonal_products(now: datetime, n: int = 3) -> list[dict]:
+def _seasonal_category(now: datetime, n: int = 3):
+    """Picks a seasonal category with enough items; returns (slug, products) or ("", [])."""
     _load_categories()
-    slugs = seasons.SEASON_SLUGS[seasons.season(now.date())]
-    ids = [cid for cid, s in _category_slugs.items() if s in slugs]
-    r = httpx.get(
-        f"{SUPABASE_URL}/rest/v1/products",
-        headers=HEADERS,
-        params={"select": "id,name,name_en,price,external_url", "is_active": "eq.true",
-                "category_id": f"in.({','.join(ids)})", "order": "updated_at.desc", "limit": "60"},
-        timeout=30,
-    )
-    r.raise_for_status()
-    items = [p for p in r.json() if p.get("name") or p.get("name_en")]
-    return random.sample(items, min(n, len(items)))
+    slugs = list(seasons.SEASON_SLUGS[seasons.season(now.date())])
+    random.shuffle(slugs)
+    for slug in slugs:
+        ids = [cid for cid, s in _category_slugs.items() if s == slug]
+        if not ids:
+            continue
+        r = httpx.get(
+            f"{SUPABASE_URL}/rest/v1/products",
+            headers=HEADERS,
+            params={"select": "id,name,name_en", "is_active": "eq.true",
+                    "category_id": f"in.({','.join(ids)})", "order": "updated_at.desc", "limit": "40"},
+            timeout=30,
+        )
+        r.raise_for_status()
+        items = [p for p in r.json() if p.get("name") or p.get("name_en")]
+        if len(items) >= n:
+            return slug, random.sample(items, n)
+    return "", []
 
 
 TREND_PROMPT = """You write for SHUSHU, an Israeli fashion discovery community on Telegram and WhatsApp.
 Write a short "trend of the week" post in natural casual Hebrew. {context}
 Pick one concrete trend that fits the season (a style, color, fabric or item) and explain in 2-3 lines why it is in now and how to wear it.
-Then present these 3 items as the way to get the look, one short line each, using the exact names below:
+Then present these 3 items as the way to get the look, one short line each, using the exact names below.
+Do not claim colors or materials that are not in the item names:
 {products}
 Address members in plural (אתם), never feminine-only (אתן). Hebrew only, no English words except brand names. No markdown, no asterisks.
 Write simple, correct everyday Hebrew like a stylish friend. No made-up slang, no transliterated foreign phrases, no word games.
@@ -322,22 +336,19 @@ Return only the post."""
 
 
 def do_trend(now: datetime):
-    products = _seasonal_products(now)
-    if len(products) < 3:
+    slug, products = _seasonal_category(now)
+    if not products:
         print("[community] Not enough seasonal products for a trend post")
         _mark_done("trend", now)
         return
     names = [p.get("name") or p.get("name_en") for p in products]
     text = _claude(TREND_PROMPT.format(context=_context(now), products="\n".join(f"- {n}" for n in names)))
-    links = "\n".join(
-        f"• {n}: {p.get('external_url') or 'https://shushu-secret.com/product/' + p['id']}"
-        for n, p in zip(names, products)
-    )
-    post = f"{text}\n\n{links}"
-    send_text(post)
-    send_text_to_group(post)
+    path = f"/category/{slug}"
+    cta = "👉 את כל הפריטים בסגנון הזה תמצאו באתר:"
+    send_text(f"{text}\n\n{cta}\n{site_link(path, 'telegram', 'trend')}")
+    send_text_to_group(f"{text}\n\n{cta}\n{site_link(path, 'whatsapp', 'trend')}")
     _mark_done("trend", now)
-    print(f"[community] ✅ Trend post sent")
+    print(f"[community] ✅ Trend post sent ({slug})")
 
 
 EVENT_PROMPT = """You write for SHUSHU, an Israeli fashion discovery community.

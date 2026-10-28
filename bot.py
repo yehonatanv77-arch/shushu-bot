@@ -44,16 +44,19 @@ def do_daily_look():
 
     print(f"[bot] Preview:\n{post_text[:300]}...")
 
+    def with_link(source):
+        return f"{post_text}\n\n👗 כל הפריטים של הלוק באתר:\n{community.site_link('/', source, 'daily_look')}"
+
     # Post model image + caption
     if look.model_image_url:
-        result = send_photo(look.model_image_url, post_text)
+        result = send_photo(look.model_image_url, with_link("telegram"))
     else:
-        result = send_text(post_text)
+        result = send_text(with_link("telegram"))
 
     if result is not None:
         tracker.mark_posted(look_key, f"https://shushu-secret.com", look.look_date, [])
         print("[bot] ✅ Daily look posted!")
-        post_product_to_whatsapp([look.model_image_url] if look.model_image_url else [], post_text)
+        post_product_to_whatsapp([look.model_image_url] if look.model_image_url else [], with_link("whatsapp"))
         return True
 
     print("[bot] ❌ Daily look post failed")
