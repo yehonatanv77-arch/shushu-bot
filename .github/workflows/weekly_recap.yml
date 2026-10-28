@@ -44,12 +44,10 @@ jobs:
         run: |
           git config user.name "SHUSHU Bot"
           git config user.email "bot@shushu-secret.com"
-          git pull --rebase origin main
           git add posted_products.json
           git diff --cached --quiet || git commit -m "chore: weekly picks tracker [skip ci]"
           for i in 1 2 3 4 5; do
-            git push && break
+            git pull --rebase -X theirs origin main && git push && break
             echo "Push attempt $i failed, retrying..."
-            git pull --rebase origin main
             sleep 10
           done
