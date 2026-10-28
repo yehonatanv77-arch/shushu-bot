@@ -263,7 +263,7 @@ def _context(now: datetime) -> str:
 
 def _claude(prompt: str, max_tokens: int = 400) -> str:
     msg = anthropic.Anthropic().messages.create(
-        model="claude-sonnet-4-6",
+        model="claude-opus-5-5",
         max_tokens=max_tokens,
         messages=[{"role": "user", "content": prompt}],
     )
