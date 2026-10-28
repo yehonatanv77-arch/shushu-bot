@@ -12,9 +12,9 @@ import time
 import httpx
 
 API = "https://api-sg.aliexpress.com/sync"
-APP_KEY = os.environ.get("ALIEXPRESS_APP_KEY", "")
-APP_SECRET = os.environ.get("ALIEXPRESS_APP_SECRET", "")
-TRACKING_ID = os.environ.get("ALIEXPRESS_TRACKING_ID", "") or "default"
+APP_KEY = os.environ.get("ALIEXPRESS_APP_KEY", "").strip()
+APP_SECRET = os.environ.get("ALIEXPRESS_APP_SECRET", "").strip()
+TRACKING_ID = os.environ.get("ALIEXPRESS_TRACKING_ID", "").strip() or "default"
 
 MIN_RATING = 95.0  # positive feedback %, roughly 4.7+ stars
 MIN_ORDERS = 300
@@ -35,15 +35,19 @@ def _sign(params: dict) -> str:
 
 
 def _call(method: str, **biz) -> dict:
-    params = {
+    # Same layout as the official IOP SDK: system params in the URL, business params in the body
+    sys_params = {
         "app_key": APP_KEY,
         "method": method,
         "sign_method": "sha256",
         "timestamp": str(int(time.time() * 1000)),
-        **{k: str(v) for k, v in biz.items()},
+        "partner_id": "iop-sdk-python-20220609",
+        "simplify": "false",
+        "format": "json",
     }
-    params["sign"] = _sign(params)
-    r = httpx.post(API, data=params, timeout=30)
+    biz = {k: str(v) for k, v in biz.items()}
+    sys_params["sign"] = _sign({**sys_params, **biz})
+    r = httpx.post(API, params=sys_params, data=biz, timeout=30)
     r.raise_for_status()
     return r.json()
 
