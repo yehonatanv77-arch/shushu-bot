@@ -1,5 +1,8 @@
 name: Probe Evolution
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      mode: {default: read}
 jobs:
   probe:
     runs-on: ubuntu-latest
@@ -13,4 +16,4 @@ jobs:
           EVOLUTION_API_KEY: ${{ secrets.EVOLUTION_API_KEY }}
           EVOLUTION_INSTANCE: ${{ secrets.EVOLUTION_INSTANCE }}
           WHATSAPP_GROUP_JID: ${{ secrets.WHATSAPP_GROUP_JID }}
-        run: python tools/probe_evolution.py
+        run: python tools/probe_evolution.py ${{ inputs.mode }}
