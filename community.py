@@ -27,7 +27,7 @@ import seasons
 import tracker
 from scraper import SUPABASE_URL, HEADERS
 from telegram_poster import send_text, send_poll, stop_poll
-from whatsapp_poster import send_text_to_group, send_poll_to_group, get_poll_votes, find_poll_id
+from whatsapp_poster import send_text_to_group, send_poll_to_group, get_poll_votes, find_poll_id, group_size
 
 IL = ZoneInfo("Asia/Jerusalem")
 TELEGRAM_LINK = "https://t.me/shusu_secret"
@@ -47,6 +47,7 @@ SCHEDULE = {
     (4, 13): "poll_close",
 }
 INVITE_HOUR = 21
+WELCOME_HOUR = 17  # once a day, only if the WhatsApp group grew since the last welcome
 EVENT_HOUR = 18  # heads-up the evening before a shopping event / holiday
 EVENT_LIST_WA_HOUR = 12  # event day: the WhatsApp group gets the list an early hour first
 EVENT_LIST_TG_HOUR = 14
@@ -558,6 +559,49 @@ def do_invite(now: datetime):
     print(f"[community] ✅ Invite sent ({n} posts today)")
 
 
+# WhatsApp hides history from new members, so newcomers get a short "what happens here" once a day
+WELCOMES = [
+    "ברוכים הבאים לכל מי שהצטרף היום 👋\n\n"
+    "מה מחכה לכם כאן:\n"
+    "👗 כל בוקר ב-9:00 לוק יומי מוכן\n"
+    "🛍️ במשך היום מציאות נבחרות, כל אחת עם קישור ישיר\n"
+    "📊 סקרים קטנים, כדי שנביא בדיוק את מה שאתם אוהבים\n\n"
+    "הקבוצה שקטה, אז רק אנחנו שולחים ואתם לא מקבלים הצפה של הודעות.\n"
+    "כל הקטלוג באתר:\n{site}\n\n"
+    "ומי שרוצה עוד מציאות כל שעה, יש לנו ערוץ טלגרם:\n{tg}",
+    "היי למצטרפים החדשים 🖤\n\n"
+    "כאן תקבלו כל יום לוק מוכן ב-9 בבוקר, מציאות אופנה שבחרנו בשבילכם וסקרים שקובעים מה נביא הלאה.\n"
+    "ההודעות הקודמות לא מופיעות אצלכם, אז הכול נמצא באתר:\n{site}\n\n"
+    "רוצים יותר? בערוץ הטלגרם עולה פריט חדש כל שעה:\n{tg}",
+    "שלום לכל מי שהגיע היום ✨\n\n"
+    "בקצרה, מה קורה פה:\n"
+    "☀️ ב-9:00 הלוק של היום\n"
+    "🔥 לאורך היום פריטים נבחרים במחירים שווים\n"
+    "🗳️ מדי פעם סקר, ואתם מחליטים מה יעלה\n\n"
+    "את כל הפריטים, גם אלה שפספסתם, תמצאו באתר:\n{site}\n\n"
+    "ובטלגרם יש עוד הרבה יותר:\n{tg}",
+]
+
+
+def do_welcome(now: datetime):
+    size = group_size()
+    if not size:
+        return
+    data = tracker.load()
+    last = data.get("wa_group_size")
+    if last is None or size <= last:
+        # First run sets the baseline; no growth means nobody new to greet
+        data["wa_group_size"] = size
+        data.setdefault("community", {})["welcome"] = now.date().isoformat()
+        tracker.save(data)
+        print(f"[community] No new members (size {size})")
+        return
+    text = random.choice(WELCOMES).format(site=site_link("/", "whatsapp", "welcome"), tg=TELEGRAM_LINK)
+    if send_text_to_group(text):
+        _mark_done("welcome", now, wa_group_size=size)
+        print(f"[community] ✅ Welcome sent (+{size - last} members)")
+
+
 ACTIONS = {"poll": do_poll, "question": do_question, "fun_poll": do_fun_poll, "trend": do_trend,
            "poll_close": do_poll_close, "invite": do_invite, "event": do_event,
            "event_list_wa": do_event_list_wa, "warmup": do_warmup, "event_list_tg": do_event_list_tg}
@@ -565,6 +609,11 @@ ACTIONS = {"poll": do_poll, "question": do_question, "fun_poll": do_fun_poll, "t
 
 def run_scheduled(now: datetime | None = None):
     now = now or now_il()
+    if now.hour == WELCOME_HOUR and not _done_today("welcome", now):
+        try:
+            do_welcome(now)
+        except Exception as e:
+            print(f"[community] ❌ welcome failed: {e}")
     try:
         refresh_category_pref(now)
     except Exception as e:

@@ -100,6 +100,22 @@ def post_product_to_whatsapp(images: list, text: str, buy_url: str = "") -> bool
     return send_text_to_group(full_text)
 
 
+def group_size() -> int:
+    """Number of members in the group (0 on failure). Never logs who they are."""
+    if not all([EVOLUTION_URL, EVOLUTION_KEY, GROUP_JID]):
+        return 0
+    try:
+        resp = httpx.get(f"{EVOLUTION_URL}/group/participants/{INSTANCE}", params={"groupJid": GROUP_JID},
+                         headers=_headers(), timeout=30)
+        if resp.status_code != 200:
+            print(f"[whatsapp] ❌ Participants error {resp.status_code}")
+            return 0
+        return len(resp.json().get("participants", []))
+    except Exception as e:
+        print(f"[whatsapp] ❌ Participants exception: {e}")
+        return 0
+
+
 def send_poll_to_group(question: str, options: list[str]) -> str:
     """Sends a poll; returns its message id ('' on failure)."""
     if not all([EVOLUTION_URL, EVOLUTION_KEY, GROUP_JID]):
