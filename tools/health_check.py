@@ -1,5 +1,5 @@
 """
-Nightly health check, runs on GitHub (no computer needed).
+Morning + nightly health check, runs on GitHub (no computer needed).
 Fails the workflow when something is missing, so GitHub emails the repo owner.
 Never prints keys or phone numbers (the repo is public).
 """
@@ -13,7 +13,9 @@ from zoneinfo import ZoneInfo
 sys.stdout.reconfigure(encoding="utf-8")
 IL = ZoneInfo("Asia/Jerusalem")
 UTC = ZoneInfo("UTC")
-today = datetime.now(IL).date()
+now = datetime.now(IL)
+today = now.date()
+morning = now.hour < 12  # morning run checks only the look; the evening run checks the whole day
 
 with open("posted_products.json", encoding="utf-8-sig") as f:
     data = json.load(f)
@@ -37,9 +39,9 @@ ali = sum(1 for ts in data.get("ali_posted", {}).values() if il_date(ts, False) 
 problems = []
 if not look:
     problems.append("הלוק היומי לא פורסם היום")
-if products + ali < 8:
+if not morning and products + ali < 8:
     problems.append(f"פורסמו רק {products + ali} מוצרים היום (צפוי בערך 15)")
-if ali == 0:
+if not morning and ali == 0:
     problems.append("לא פורסמה אף מציאה של עלי היום")
 
 lines = [f"דוח {today:%d.%m}", f"לוק יומי: {'כן' if look else 'לא'}",
