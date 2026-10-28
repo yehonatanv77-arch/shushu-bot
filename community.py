@@ -5,6 +5,7 @@ Community actions, run from the hourly bot by Israel day and hour:
   Thu 13:00  fun seasonal poll (the WhatsApp group is read-only, members can only vote)
   Fri 13:00  close poll, announce winner, boost that brand for a week
   18:00 the day before a shopping event or holiday  heads-up message
+  Black Friday warm-up, 20:00: teaser (-14 days), poll (-10), countdown (-7), prep (-3)
   Event day  hand-picked list under a price cap: WhatsApp 12:00 (early), Telegram 14:00.
              No discount claims, our supplier gives no coupons.
   Daily 21:00  WhatsApp invite to the Telegram channel
@@ -419,7 +420,85 @@ def _event_items(cap: int, now: datetime, n: int = 8) -> list[dict]:
     r.raise_for_status()
     items = [p for p in r.json() if (p.get("name") or p.get("name_en")) and p.get("price")
              and _category_slugs.get(p.get("category_id") or "", "") not in off]
-    return random.sample(items, min(n, len(items)))
+    random.shuffle(items)
+    # Half the list from what members asked for in the warm-up poll, if they voted
+    wanted = WARMUP_POLL_OPTIONS.get((tracker.load().get("warmup_poll") or {}).get("winner", ""))
+    if wanted:
+        top = [p for p in items if _category_roots.get(p.get("category_id") or "", "") in wanted][: n // 2]
+        items = top + [p for p in items if p not in top]
+    return items[:n]
+
+
+# Black Friday warm-up, 20:00 Israel time (after the product slots, before the invite)
+WARMUP_EVENT = "בלאק פריידיי"
+WARMUP_HOUR = 20
+WARMUP_STAGES = {
+    14: "teaser",     # two weeks out: something is coming
+    10: "poll",       # what are you waiting for (shapes the event list)
+    7: "countdown",   # one week, start a wish list
+    3: "prep",        # check sizes and return policy, save items
+}
+WARMUP_POLL_QUESTION = "מה אתם הכי מחכים למצוא בבלאק פריידיי? 🖤"
+WARMUP_POLL_OPTIONS = {
+    "נעליים וסניקרס": {"shoes"},
+    "מעילים ובגדי חורף": {"clothing"},
+    "תיקים ואקססוריז": {"bags", "accessories"},
+    "שעונים ותכשיטים": {"watches", "accessories"},
+}
+
+WARMUP_PROMPT = """You write for SHUSHU, an Israeli fashion discovery community on Telegram and WhatsApp.
+We are warming members up for {name}, which is in {days} days ({date}). Stage: {stage}.
+Stages:
+- teaser: short intriguing message that we are preparing something special for {name}: a hand-picked list of the best finds under 150 ₪, and the WhatsApp group gets it an hour before everyone.
+- countdown: one week left. Suggest starting a wish list now, tell them what to expect on the day.
+- prep: three days left. One practical tip (check sizes, return policy, save items in advance) and a reminder that the list lands here on the day at noon.
+Write 2-4 lines in natural casual Hebrew. Never promise discounts, sales or coupons; the value is our curation and early access.
+Address members in plural (אתם). Hebrew only, no English words except brand names. No markdown, no asterisks.
+At most 2 emojis, no em dashes, no hashtags, no links. Return only the message."""
+
+
+def _warmup_stage(now: datetime):
+    for d, name, _hint, _cap in seasons._all_events(now.date()):
+        if name == WARMUP_EVENT:
+            days = (d - now.date()).days
+            if days in WARMUP_STAGES:
+                return WARMUP_STAGES[days], days, d
+    return None
+
+
+def do_warmup(now: datetime):
+    stage = _warmup_stage(now)
+    if not stage:
+        return
+    kind, days, day = stage
+    if kind == "poll":
+        options = list(WARMUP_POLL_OPTIONS)
+        tg = send_poll(WARMUP_POLL_QUESTION, options)
+        wa_id = send_poll_to_group(WARMUP_POLL_QUESTION, options)
+        _mark_done("warmup", now, warmup_poll={
+            "message_id": tg["message_id"] if tg else None, "wa_id": wa_id, "winner": "",
+        })
+        print("[community] ✅ Warm-up poll sent")
+        return
+    text = _claude(WARMUP_PROMPT.format(name=WARMUP_EVENT, days=days, date=day.strftime("%d.%m"), stage=kind), 250)
+    send_text(text)
+    send_text_to_group(text)
+    _mark_done("warmup", now)
+    print(f"[community] ✅ Warm-up ({kind}) sent")
+
+
+def refresh_warmup_poll():
+    """Counts the warm-up poll (WhatsApp votes) so the event list can lean toward what members want."""
+    data = tracker.load()
+    poll = data.get("warmup_poll") or {}
+    if not poll.get("wa_id"):
+        return
+    votes = get_poll_votes(poll["wa_id"])
+    poll["votes"] = votes
+    poll["winner"] = max(votes, key=votes.get) if votes else ""
+    data["warmup_poll"] = poll
+    tracker.save(data)
+    print(f"[community] Warm-up poll votes: {votes}")
 
 
 def _event_post(now: datetime, source: str, early: bool) -> str:
@@ -481,7 +560,7 @@ def do_invite(now: datetime):
 
 ACTIONS = {"poll": do_poll, "question": do_question, "fun_poll": do_fun_poll, "trend": do_trend,
            "poll_close": do_poll_close, "invite": do_invite, "event": do_event,
-           "event_list_wa": do_event_list_wa, "event_list_tg": do_event_list_tg}
+           "event_list_wa": do_event_list_wa, "warmup": do_warmup, "event_list_tg": do_event_list_tg}
 
 
 def run_scheduled(now: datetime | None = None):
@@ -495,7 +574,14 @@ def run_scheduled(now: datetime | None = None):
         action = "invite"
     if now.hour == EVENT_HOUR and _event_tomorrow(now):
         action = "event"
+    if now.hour == WARMUP_HOUR and _warmup_stage(now):
+        action = "warmup"
     if seasons.event_today(now.date()):
+        if now.hour == EVENT_LIST_WA_HOUR and not _done_today("event_list_wa", now):
+            try:
+                refresh_warmup_poll()
+            except Exception as e:
+                print(f"[community] ❌ warm-up poll count failed: {e}")
         if now.hour == EVENT_LIST_WA_HOUR:
             action = "event_list_wa"
         elif now.hour == EVENT_LIST_TG_HOUR:
