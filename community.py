@@ -264,10 +264,11 @@ def _context(now: datetime) -> str:
 def _claude(prompt: str, max_tokens: int = 400) -> str:
     msg = anthropic.Anthropic().messages.create(
         model="claude-opus-5-5",
-        max_tokens=max_tokens,
+        max_tokens=max_tokens + 1500,
         messages=[{"role": "user", "content": prompt}],
     )
-    return msg.content[0].text.strip().replace("—", ",").replace("–", ",").replace("**", "")
+    text = "".join(getattr(b, "text", None) or "" for b in msg.content if getattr(b, "type", "") == "text")
+    return text.strip().replace("—", ",").replace("–", ",").replace("**", "")
 
 
 FUN_POLL_PROMPT = """You write for SHUSHU, an Israeli fashion discovery community. Members cannot write in the WhatsApp group, they can only vote in polls.
