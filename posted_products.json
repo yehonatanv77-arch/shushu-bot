@@ -269,9 +269,15 @@
       "lastmod": "2026-10-26T18:41:42.774405+00:00",
       "posted_at": "2026-10-29T07:05:33.166392",
       "telegram_message_ids": []
+    },
+    "57c36137-6491-4ba8-b5fe-13d863b35f5f": {
+      "url": "https://shushu-secret.com/product/57c36137-6491-4ba8-b5fe-13d863b35f5f",
+      "lastmod": "2026-10-28T09:55:34.859582+00:00",
+      "posted_at": "2026-10-29T08:00:55.024370",
+      "telegram_message_ids": []
     }
   },
-  "run_count": 56,
+  "run_count": 57,
   "category_pref": {
     "wa_id": "3EB049D21CE0904837867E",
     "votes": {
@@ -286,6 +292,7 @@
     "shoes",
     "clothing",
     "watches",
-    "shoes"
+    "shoes",
+    "clothing"
   ]
 }
