@@ -281,9 +281,15 @@
       "lastmod": "2026-06-24T08:15:53.7441+00:00",
       "posted_at": "2026-10-29T10:00:51.633079",
       "telegram_message_ids": []
+    },
+    "article_13919d90-0702-4731-82da-ecbd76b43189": {
+      "url": "https://shushu-secret.com/blog/accessories-buying-guide",
+      "lastmod": "2026-10-26T18:13:57.046422+00:00",
+      "posted_at": "2026-10-29T11:00:48.707665",
+      "telegram_message_ids": []
     }
   },
-  "run_count": 59,
+  "run_count": 60,
   "category_pref": {
     "wa_id": "3EB049D21CE0904837867E",
     "votes": {
@@ -396,5 +402,11 @@
   },
   "ali_posted": {
     "1005008077486634": "2026-10-29T11:00:52.476216+02:00"
+  },
+  "fun_polls": [
+    "מה הדבר הראשון שאתם קונים ב־11.11 לחורף? 🛍️"
+  ],
+  "community": {
+    "fun_poll": "2026-10-29"
   }
 }
