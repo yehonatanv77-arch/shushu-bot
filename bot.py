@@ -49,8 +49,12 @@ def do_daily_look():
         return f"{post_text}\n\n👗 כל הפריטים של הלוק באתר:\n{community.site_link('/', source, 'daily_look')}"
 
     # Post model image + caption
-    if look.model_image_url:
+    if look.model_image_url and len(with_link("telegram")) <= 1024:
         result = send_photo(look.model_image_url, with_link("telegram"))
+    elif look.model_image_url:
+        # Telegram caps photo captions at 1024 chars: photo first, then the full text
+        send_photo(look.model_image_url, "")
+        result = send_text(with_link("telegram"))
     else:
         result = send_text(with_link("telegram"))
 
