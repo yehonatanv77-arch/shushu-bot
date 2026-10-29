@@ -257,22 +257,29 @@
       "lastmod": "2026-10-27T12:54:56.38415+00:00",
       "posted_at": "2026-10-28T21:39:39.948658",
       "telegram_message_ids": []
+    },
+    "d9895efd-c46b-484f-9391-653b5a227155": {
+      "url": "https://shushu-secret.com/product/d9895efd-c46b-484f-9391-653b5a227155",
+      "lastmod": "2026-02-24T18:03:58.066248+00:00",
+      "posted_at": "2026-10-29T07:00:51.680642",
+      "telegram_message_ids": []
     }
   },
-  "run_count": 54,
+  "run_count": 55,
   "category_pref": {
     "wa_id": "3EB049D21CE0904837867E",
     "votes": {
+      "יוקרה במחיר נגיש": 2,
       "נעליים וסניקרס": 4,
-      "יוקרה במחיר נגיש": 1,
       "בגדים": 1
     },
-    "winner": "נעליים וסניקרס",
-    "date": "2026-10-28"
+    "winner": "",
+    "date": "2026-10-29"
   },
   "recent_roots": [
     "shoes",
     "clothing",
-    "watches"
+    "watches",
+    "shoes"
   ]
 }
