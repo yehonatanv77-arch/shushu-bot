@@ -44,6 +44,7 @@ jobs:
           EVOLUTION_API_KEY: ${{ secrets.EVOLUTION_API_KEY }}
           EVOLUTION_INSTANCE: ${{ secrets.EVOLUTION_INSTANCE }}
           WHATSAPP_GROUP_JID: ${{ secrets.WHATSAPP_GROUP_JID }}
+          WHATSAPP_PAUSED: ${{ vars.WHATSAPP_PAUSED }}
         run: python weekly_picks.py || echo "Weekly picks exited with error — tracker will still be committed"
 
       - name: Commit tracker update

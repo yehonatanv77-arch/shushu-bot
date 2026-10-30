@@ -22,5 +22,6 @@ jobs:
           TELEGRAM_CHANNEL_ID: dry-run
           EVOLUTION_INSTANCE: ${{ secrets.EVOLUTION_INSTANCE }}
           WHATSAPP_GROUP_JID: ${{ secrets.WHATSAPP_GROUP_JID }}
+          WHATSAPP_PAUSED: ${{ vars.WHATSAPP_PAUSED }}
           PYTHONPATH: .
         run: python tools/probe_evolution.py ${{ inputs.mode }}

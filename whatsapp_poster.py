@@ -10,6 +10,10 @@ EVOLUTION_URL = os.environ.get("EVOLUTION_API_URL", "").rstrip("/")
 EVOLUTION_KEY = os.environ.get("EVOLUTION_API_KEY", "")
 INSTANCE = os.environ.get("EVOLUTION_INSTANCE", "default")
 GROUP_JID = os.environ.get("WHATSAPP_GROUP_JID", "")
+# Off switch (GitHub repo variable WHATSAPP_PAUSED=1): nothing is sent to the group while the connection is down
+if os.environ.get("WHATSAPP_PAUSED", "").strip() == "1":
+    print("[whatsapp] Paused, nothing will be sent")
+    GROUP_JID = ""
 
 
 def _headers() -> dict:
