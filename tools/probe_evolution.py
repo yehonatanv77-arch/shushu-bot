@@ -1,5 +1,7 @@
-"""Dry check: can we read the WhatsApp group size? Prints only the count."""
+"""Dry check: WhatsApp connection state. Prints no keys or numbers."""
 import sys
 sys.path.insert(0, ".")
-from whatsapp_poster import group_size
-print("GROUP SIZE:", group_size())
+import httpx
+from whatsapp_poster import EVOLUTION_URL, INSTANCE, _headers
+r = httpx.get(f"{EVOLUTION_URL}/instance/connectionState/{INSTANCE}", headers=_headers(), timeout=30)
+print("STATE:", r.status_code, r.text[:200])
