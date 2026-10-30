@@ -371,9 +371,15 @@
       "lastmod": "2026-05-06T10:42:47.139543+00:00",
       "posted_at": "2026-10-30T10:00:52.183694",
       "telegram_message_ids": []
+    },
+    "article_1b7ed087-e373-412c-8484-c17905c34bf0": {
+      "url": "https://shushu-secret.com/blog/alo-yoga-israel-guide",
+      "lastmod": "2026-10-26T17:57:55.769117+00:00",
+      "posted_at": "2026-10-30T11:01:03.084265",
+      "telegram_message_ids": []
     }
   },
-  "run_count": 75,
+  "run_count": 76,
   "category_pref": {
     "wa_id": "3EB049D21CE0904837867E",
     "votes": {},
@@ -694,7 +700,8 @@
   "community": {
     "fun_poll": "2026-10-29",
     "welcome": "2026-10-29",
-    "invite": "2026-10-29"
+    "invite": "2026-10-29",
+    "poll_close": "2026-10-30"
   },
   "wa_group_size": 199
 }
