@@ -16,13 +16,15 @@ ALI_PROMPT = """You write for SHUSHU, an Israeli fashion discovery community on 
 Below are AliExpress items (machine-translated titles) found when searching for: {label}. {context}
 Pick the ONE item that best fits a stylish Israeli audience right now and actually matches "{label}"
 (skip items that are something else, like yarn when searching for coats, or off-season items).
-Then write a short post in natural casual Hebrew, 4-6 lines:
-- open with a catchy line that starts with "המציאה של עלי:"
-- describe the item in plain words (what it is, how to wear it), based only on the title; do not invent materials or details
-- mention the price ₪{{price}} exactly as given, and that it ships from AliExpress so delivery takes a while
-- never mention discounts, "was" prices or sales
-Address members in plural (אתם). Hebrew only, no English words. No markdown, no asterisks, no links, no hashtags.
-At most 2 emojis, no em dashes.
+Then write a short post whose job is to make people buy, in simple Hebrew, short lines easy to scan on a phone, exactly this structure:
+Line 1: "🔥 המציאה של עלי:" + the item and its price, leading with the value (e.g. "🔥 המציאה של עלי: סוודר סרוג רך ב-₪{{price}}")
+Blank line
+2-3 lines, each starting with ✨: concrete reasons to buy (how it looks, how to wear it, what to match it with), based only on the title; do not invent materials or details
+Blank line
+💰 מחיר: ₪{{price}}
+🚚 נשלח מאלי אקספרס, המשלוח לוקח קצת זמן
+Never mention discounts, "was" prices or sales. Address members in plural (אתם). Hebrew only, no English words.
+No markdown, no asterisks, no links, no hashtags, no em dashes.
 Items:
 {items}
 Return only JSON: {{"index": <number>, "post": "..."}} or {{"index": -1}} if none fits."""

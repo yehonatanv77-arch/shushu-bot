@@ -24,6 +24,8 @@ import ali_post
 # Every N runs, post an article instead of a product (0 = disable articles)
 ARTICLE_EVERY_N_RUNS = int(os.environ.get("ARTICLE_EVERY_N_RUNS", "4"))
 
+ORDER_GUIDE = "https://docs.google.com/document/d/16jjzmZXx2ITXo2P7sl_LMVlTqLC6Vjp8Cy7BI_X60rs/edit?usp=sharing"
+
 
 def do_daily_look():
     """Fetches today's daily look and posts it to Telegram."""
@@ -212,6 +214,7 @@ def do_product(run_number: int):
         post_text = generate_post(product, format_index)
         if not post_text:
             continue
+        post_text += f"\n\n📖 פעם ראשונה מזמינים? המדריך המלא כאן:\n{ORDER_GUIDE}"
 
         print(f"[bot] Format #{format_index} preview:\n{post_text[:250]}...")
 
@@ -232,7 +235,8 @@ def do_product(run_number: int):
             community.note_root(community.root_of(entry))
             print(f"[bot] ✅ Product posted!")
             if community.whatsapp_product_slot(community.now_il()):
-                post_product_to_whatsapp(product.images or [], post_text, buy_url)
+                # WhatsApp gets one image only: the last one, which shows the model code
+                post_product_to_whatsapp(product.images[-1:], post_text, buy_url)
             return True
 
         print("[bot] ❌ Telegram failed, trying next product")
