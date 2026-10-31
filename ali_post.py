@@ -24,8 +24,7 @@ Blank line
 2-3 lines, each starting with ✨: concrete reasons to buy (how it looks, how to wear it, what to match it with), based only on the title; do not invent materials or details
 Blank line
 💰 מחיר: ₪{{price}}
-🚚 נשלח מאלי אקספרס, המשלוח לוקח קצת זמן
-Never mention discounts, "was" prices or sales. Address members in plural (אתם). Hebrew only, no English words.
+Never mention shipping or delivery times. Never mention discounts, "was" prices or sales. Address members in plural (אתם). Hebrew only, no English words.
 No markdown, no asterisks, no links, no hashtags, no em dashes.
 Items:
 {items}
