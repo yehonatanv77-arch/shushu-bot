@@ -214,7 +214,7 @@ def do_product(run_number: int):
         post_text = generate_post(product, format_index)
         if not post_text:
             continue
-        post_text += f"\n\n📖 פעם ראשונה מזמינים? המדריך המלא כאן:\n{ORDER_GUIDE}"
+        guide = f"📖 פעם ראשונה מזמינים? המדריך המלא כאן:\n{ORDER_GUIDE}"
 
         print(f"[bot] Format #{format_index} preview:\n{post_text[:250]}...")
 
@@ -225,9 +225,9 @@ def do_product(run_number: int):
 
         buy_url = product.external_url if product.external_url else product.url
         if product.images:
-            success = post_product(product.images, post_text, buy_url)
+            success = post_product(product.images, f"{post_text}\n\n{guide}", buy_url)
         else:
-            result = send_text(post_text, buy_url)
+            result = send_text(f"{post_text}\n\n{guide}", buy_url)
             success = result is not None
 
         if success:
@@ -236,7 +236,7 @@ def do_product(run_number: int):
             print(f"[bot] ✅ Product posted!")
             if community.whatsapp_product_slot(community.now_il()):
                 # WhatsApp gets one image only: the last one, which shows the model code
-                post_product_to_whatsapp(product.images[-1:], post_text, buy_url)
+                post_product_to_whatsapp(product.images[-1:], post_text, buy_url, guide)
             return True
 
         print("[bot] ❌ Telegram failed, trying next product")

@@ -53,7 +53,7 @@ EVENT_LIST_WA_HOUR = 12  # event day: the WhatsApp group gets the list an early 
 EVENT_LIST_TG_HOUR = 14
 
 # WhatsApp product slots; a community post scheduled for the same hour takes the slot
-WA_PRODUCT_HOURS = tuple(range(10, 20))  # 10 product posts a day, 10:00-19:00
+WA_PRODUCT_HOURS = (12, 15, 18, 20)  # experiment from 01/11/2026: 4 product posts a day instead of 10 (churn)
 ALI_HOURS = (11, 15, 19)  # "המציאה של עלי" takes these product slots
 
 
