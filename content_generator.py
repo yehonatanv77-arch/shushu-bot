@@ -113,6 +113,17 @@ CTA של מילה אחת.""",
     },
 ]
 
+# Opening-line styles, one picked at random per post so the feed never starts the same way twice
+HOOK_STYLES = [
+    'price vs. look: the price and what it looks like it costs (only if believable), e.g. "ג\'קט עור שחור ב-189 ₪ שנראה כמו 900"',
+    'a question the reader answers yes to, e.g. "מחפשות ג\'קט שהולך גם לעבודה וגם לערב?"',
+    'the problem it solves, e.g. "נגמרו הבקרים של אין לי מה ללבוש"',
+    'a bold short statement about the item, e.g. "זה הג\'קט של החורף הזה"',
+    'the occasion, e.g. "לדייט של סוף השבוע: ג\'קט עור שחור"',
+    'the main feeling or benefit, e.g. "נוח כמו טרנינג, נראה כמו מליון דולר"',
+    'the season or the moment, e.g. "הקור הגיע, וזה מה שלובשים עליו"',
+]
+
 PRODUCT_POST_PROMPT = """You are the voice of SHUSHU, an Israeli shopping community. Your job is to make people BUY.
 
 RULES:
@@ -123,8 +134,8 @@ RULES:
 - Do NOT mention the brand name
 
 STRUCTURE (exactly this):
-Line 1: one emoji that fits the item + a hook that leads with the price and the value, e.g. "🔥 ג'קט עור שחור ב-189 ₪ שנראה כמו 900"
-(the "looks like" comparison only if it is believable for this item; otherwise lead with the main benefit)
+Line 1: one emoji that fits the item (not always 🔥) + a short hook in this style: {hook_style}
+The hook must name the item, and make someone stop scrolling. Do not start with "המציאה" or with the same words every time.
 Blank line
 2-3 lines, each starting with ✨: concrete reasons to buy (feel, fit, how to wear it, a quality detail). No story.
 Blank line
@@ -173,6 +184,7 @@ def generate_post(product: Product, format_index: int) -> str:
     prompt = PRODUCT_POST_PROMPT.format(
         format_name=fmt["name"],
         format_instruction=fmt["instruction"],
+        hook_style=random.choice(HOOK_STYLES),
         name=product.name_en or product.name,
         brand=product.brand or "מותג פרימיום",
         price=product.price,
