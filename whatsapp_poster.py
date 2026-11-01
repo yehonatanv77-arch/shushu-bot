@@ -93,7 +93,7 @@ def send_image_to_group(image_url: str, caption: str) -> bool:
 
 
 def post_product_to_whatsapp(images: list, text: str, buy_url: str = "", footer: str = "",
-                             buy_label: str = "👇 להזמנה מהכספת 👇") -> bool:
+                             buy_label: str = "👇 להזמנה מ-SHUSHU 👇") -> bool:
     """Posts a product to WhatsApp — image + text + buy link (+ footer after the link)."""
     # Append buy link to text for WhatsApp (no inline buttons like Telegram)
     full_text = text

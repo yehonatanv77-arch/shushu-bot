@@ -146,7 +146,7 @@ Blank line
 🎨 colors / options, only if the description mentions them
 📏 מידות: [sizes]
 Blank line
-{israel_line}🔐 בכספת רק [price]₪! 😱
+{israel_line}🤫 ב-SHUSHU רק [price]₪! 😱
 
 Example of the tone and layout (a different item, do not copy the words):
 *🔥 בנות, תראו איזה ג'קט מצאנו לכן! 😍*
@@ -156,7 +156,7 @@ Example of the tone and layout (a different item, do not copy the words):
 🎨 שני צבעים לבחירה: תכלת ושחור
 📏 מידות: S-XL
 
-🔐 בכספת רק 194₪! 😱
+🤫 ב-SHUSHU רק 194₪! 😱
 
 Angle for the hook and reasons (use it as inspiration only, keep the structure): {format_instruction}
 
