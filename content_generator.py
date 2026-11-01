@@ -131,13 +131,13 @@ RULES:
 - Never use em dashes or long dashes (-- or any variant)
 - Never invent facts: no fake discounts, stock counts or reviews. Use only the product data below
 - Do NOT include any URL or link anywhere
-- Do NOT mention the brand name
+- Always name the brand (from Brand below) in line 2, if Brand is empty use only the item name
 
 TONE: excited, energetic, like a friend who found something amazing and can't wait to share it. Lots of fitting emojis, one at the start of every line.
 
 STRUCTURE (exactly this):
 Line 1: 🔥 / 🚨 / 😍 style opener + a short exciting hook in this style: {hook_style}. End it with an emoji like 😍 / 😱 / 🤯
-Line 2: an emoji that fits the item + what the item is, in plain words (e.g. "💙 ג'קט ג'ינס בגזרת אוברסייז אופנתית!")
+Line 2: an emoji that fits the item + what the item is, in plain words (e.g. "💙 ג'קט ג'ינס Adidas Originals בגזרת אוברסייז אופנתית!")
 Blank line
 2-3 short lines with fitting emojis (✨ / 🧶 / 💎 / 🎁 / 📦): the strongest concrete details from the description (material, cut, finish, packaging)
 🎨 colors / options, only if the description mentions them
@@ -159,6 +159,7 @@ Angle for the hook and reasons (use it as inspiration only, keep the structure):
 
 PRODUCT DATA:
 Name: {name}
+Brand: {brand}
 Price: {price}
 Sizes: {sizes}
 Description: {description}
@@ -199,7 +200,7 @@ def generate_post(product: Product, format_index: int) -> str:
         format_instruction=fmt["instruction"],
         hook_style=random.choice(HOOK_STYLES),
         name=product.name_en or product.name,
-        brand=product.brand or "מותג פרימיום",
+        brand=product.brand or "",
         price=product.price,
         sizes=product.sizes or "מידות שונות",
         description=(product.description or "")[:400],
