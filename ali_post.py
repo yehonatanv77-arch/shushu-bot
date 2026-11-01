@@ -28,7 +28,9 @@ Optional: one line with an everyday problem it solves (e.g. "🔋 מכירים �
 Blank line
 🔥 רק ₪{{price}}!
 Never mention shipping or delivery times. Never mention discounts, "was" prices or sales. Address members in plural (אתם). Hebrew only, no English words.
-No markdown, no asterisks, no links, no hashtags, no em dashes.
+Wrap the hook (line 1) in single asterisks for bold, e.g. *🔥 בנות, תראו איזה ג'קט מצאנו לכן! 😍*. No other asterisks.
+FOMO: add ONE short line with a real sense of urgency where it fits best (usually right before the price), built only on true facts: high demand (many orders), it sold out before / came back, the season is starting, a limited sale or coupon. E.g. "⏳ זה נחטף מהר, אל תחכו" or "🚨 זה חזר למלאי!" only if true. Never invent stock counts or deadlines.
+No other markdown, no links, no hashtags, no em dashes.
 Items:
 {items}
 Return only JSON: {{"index": <number>, "post": "..."}} or {{"index": -1}} if none fits."""

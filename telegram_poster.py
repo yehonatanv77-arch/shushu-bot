@@ -2,6 +2,7 @@
 Posts content to Telegram channel.
 """
 
+import re
 import httpx
 import os
 from typing import Optional
@@ -28,7 +29,9 @@ def _is_image_accessible(url: str) -> bool:
 
 def _sanitize(text: str) -> str:
     """Escape HTML special chars so parse_mode HTML never rejects the message."""
-    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    text = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    # WhatsApp-style *bold* becomes Telegram bold, so one post text works on both
+    return re.sub(r"\*([^*\n]+)\*", r"<b>\1</b>", text)
 
 
 def send_photo(image_url: str, caption: str, buy_url: str = "") -> Optional[dict]:
@@ -36,6 +39,7 @@ def send_photo(image_url: str, caption: str, buy_url: str = "") -> Optional[dict
         "chat_id": CHANNEL_ID,
         "photo": image_url,
         "caption": _sanitize(caption),
+        "parse_mode": "HTML",
     }
     if buy_url:
         payload["reply_markup"] = _buy_button(buy_url)
@@ -67,6 +71,7 @@ def send_media_group(image_urls: list[str], caption: str, buy_url: str = "") -> 
         item = {"type": "photo", "media": url}
         if i == 0:
             item["caption"] = _sanitize(caption)
+            item["parse_mode"] = "HTML"
         media.append(item)
 
     with httpx.Client(timeout=30) as client:
@@ -94,6 +99,7 @@ def send_text(text: str, buy_url: str = "") -> Optional[dict]:
     payload = {
         "chat_id": CHANNEL_ID,
         "text": _sanitize(text),
+        "parse_mode": "HTML",
         "disable_web_page_preview": False,
     }
     if buy_url:
