@@ -143,7 +143,7 @@ Blank line
 🎨 colors / options, only if the description mentions them
 📏 מידות: [sizes]
 Blank line
-🔐 בכספת רק [price]₪! 😱
+{israel_line}🔐 בכספת רק [price]₪! 😱
 
 Example of the tone and layout (a different item, do not copy the words):
 🔥 בנות, תראו איזה ג'קט מצאנו לכן! 😍
@@ -189,16 +189,48 @@ End with exactly:
 Return ONLY the post text."""
 
 
+def israel_price(product: Product) -> int:
+    """Looks up what this item (or the same model) costs in Israeli stores; 0 when not found."""
+    query = f"{product.brand} {product.name_en or product.name}".strip()
+    try:
+        msg = client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=1500,
+            tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 3}],
+            messages=[{"role": "user", "content": (
+                f"Find the regular price in Israel (ILS, Israeli online stores or the brand's Israeli site) of: {query}. "
+                "Same model, or the closest model of the same brand and type. "
+                'Answer with only JSON: {"price": <number in ILS>} or {"price": 0} if you are not sure.')}],
+        )
+        text = "".join(b.text for b in msg.content if getattr(b, "type", "") == "text")
+        return int(float(json.loads(text[text.find("{"): text.rfind("}") + 1]).get("price") or 0))
+    except Exception as e:
+        print(f"[content] Israel price lookup failed: {e}")
+        return 0
+
+
 def generate_post(product: Product, format_index: int) -> str:
     """Generates a Hebrew Telegram post using a randomly selected format."""
     fmt = random.choice(FORMATS)
 
     buy_url = product.external_url if product.external_url else product.url
 
+    il_price = israel_price(product)
+    try:
+        ours = float(str(product.price).replace("₪", "").replace(",", "").strip())
+    except ValueError:
+        ours = 0
+    israel_line = ""
+    if il_price and ours and il_price > ours * 1.3:
+        print(f"[content] Israel price: {il_price}")
+        # The model writes this line as-is, then a blank line before the vault price
+        israel_line = f"🇮🇱 [the item type in plural, e.g. ג'קטים דומים] של המותג בארץ: כ־{il_price}₪\n\n"
+
     prompt = PRODUCT_POST_PROMPT.format(
         format_name=fmt["name"],
         format_instruction=fmt["instruction"],
         hook_style=random.choice(HOOK_STYLES),
+        israel_line=israel_line,
         name=product.name_en or product.name,
         brand=product.brand or "",
         price=product.price,
