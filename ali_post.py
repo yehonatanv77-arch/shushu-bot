@@ -15,7 +15,7 @@ from content_generator import HOOK_STYLES
 
 ALI_PROMPT = """You write for SHUSHU, an Israeli fashion discovery community on Telegram and WhatsApp.
 Below are AliExpress items (machine-translated titles) found when searching for: {label}. {context}
-Pick the ONE item that best fits a stylish Israeli audience right now and actually matches "{label}"
+Pick the ONE item that best fits a stylish Israeli audience right now (prefer items that have a coupon) and actually matches "{label}"
 (skip items that are something else, like yarn when searching for coats, or off-season items).
 Then write a short post whose job is to make people buy: excited, energetic Hebrew, short lines easy to scan on a phone,
 a fitting emoji at the start of every line. Exactly this structure:
@@ -56,7 +56,7 @@ def make_post(now: datetime | None = None) -> dict | None:
         if len(items) < 3:
             continue
         _record_prices(items, now.date().isoformat())
-        listing = "\n".join(f"{n}. {i['title'][:120]} | ₪{i['price']} | {i['orders']} orders | rating {i['rating']}%"
+        listing = "\n".join(f"{n}. {i['title'][:120]} | ₪{i['price']} | {i['orders']} orders | rating {i['rating']}%{' | has coupon' if i.get('promo') else ''}"
                             for n, i in enumerate(items))
         raw = community._claude(ALI_PROMPT.format(label=label, context=community._context(now), items=listing,
                                               hook_style=random.choice(HOOK_STYLES)), 600)
@@ -69,6 +69,13 @@ def make_post(now: datetime | None = None) -> dict | None:
             continue
         it = items[idx]
         text = pick["post"].replace("{price}", str(it["price"]))
+        promo = it.get("promo") or {}
+        if promo:
+            # Added in code, not by Claude, so the coupon is always copied exactly
+            text += f"\n\n🎁 קופון: {promo['code']}"
+            if promo["value"]:
+                text += f" ({promo['value']} הנחה"
+                text += f" בקנייה מעל {promo['min_spend']})" if promo["min_spend"] else ")"
         link = aliexpress.short_link(it["id"]) or it["link"]
         return {"text": text, "image": it["image"], "link": link, "id": it["id"], "label": label}
     return None

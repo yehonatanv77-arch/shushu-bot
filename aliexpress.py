@@ -8,6 +8,7 @@ import hmac
 import os
 import re
 import time
+from datetime import datetime
 
 import httpx
 
@@ -131,8 +132,22 @@ def search(keywords: str, category_id: str = "", page_size: int = 50) -> list[di
             "orders": int(p.get("lastest_volume") or 0),
             "image": p.get("product_main_image_url"),
             "link": p["promotion_link"],
+            "promo": _promo(p),
         })
     return clean
+
+
+def _promo(p: dict) -> dict:
+    """The seller's coupon code from the API ({} when there is none or it already expired)."""
+    info = p.get("promo_code_info") or {}
+    code = str(info.get("promo_code") or "").strip()
+    if not code:
+        return {}
+    end = str(info.get("code_availabletime_end") or "")
+    if end and end[:10] < datetime.now().strftime("%Y-%m-%d"):
+        return {}
+    return {"code": code, "value": str(info.get("code_value") or "").strip(),
+            "min_spend": str(info.get("code_mini_spend") or "").strip()}
 
 
 def short_link(product_id: str) -> str:
