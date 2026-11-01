@@ -133,14 +133,27 @@ RULES:
 - Do NOT include any URL or link anywhere
 - Do NOT mention the brand name
 
+TONE: excited, energetic, like a friend who found something amazing and can't wait to share it. Lots of fitting emojis, one at the start of every line.
+
 STRUCTURE (exactly this):
-Line 1: one emoji that fits the item (not always 🔥) + a short hook in this style: {hook_style}
-The hook must name the item, and make someone stop scrolling. Do not start with "המציאה" or with the same words every time.
+Line 1: 🔥 / 🚨 / 😍 style opener + a short exciting hook in this style: {hook_style}. End it with an emoji like 😍 / 😱 / 🤯
+Line 2: an emoji that fits the item + what the item is, in plain words (e.g. "💙 ג'קט ג'ינס בגזרת אוברסייז אופנתית!")
 Blank line
-2-3 lines, each starting with ✨: concrete reasons to buy (feel, fit, how to wear it, a quality detail). No story.
-Blank line
-💰 מחיר: [price] ₪
+2-3 short lines with fitting emojis (✨ / 🧶 / 💎 / 🎁 / 📦): the strongest concrete details from the description (material, cut, finish, packaging)
+🎨 colors / options, only if the description mentions them
 📏 מידות: [sizes]
+Blank line
+🔐 בכספת רק [price]₪! 😱
+
+Example of the tone and layout (a different item, do not copy the words):
+🔥 בנות, תראו איזה ג'קט מצאנו לכן! 😍
+💙 ג'קט ג'ינס בגזרת אוברסייז אופנתית!
+
+✨ פסים בצד ועיצוב וינטג' מושלם
+🎨 שני צבעים לבחירה: תכלת ושחור
+📏 מידות: S-XL
+
+🔐 בכספת רק 194₪! 😱
 
 Angle for the hook and reasons (use it as inspiration only, keep the structure): {format_instruction}
 

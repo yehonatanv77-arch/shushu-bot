@@ -17,13 +17,16 @@ ALI_PROMPT = """You write for SHUSHU, an Israeli fashion discovery community on 
 Below are AliExpress items (machine-translated titles) found when searching for: {label}. {context}
 Pick the ONE item that best fits a stylish Israeli audience right now and actually matches "{label}"
 (skip items that are something else, like yarn when searching for coats, or off-season items).
-Then write a short post whose job is to make people buy, in simple Hebrew, short lines easy to scan on a phone, exactly this structure:
-Line 1: one emoji that fits the item + a short hook that names the item, in this style: {hook_style}
-Do not start with the same words every time.
+Then write a short post whose job is to make people buy: excited, energetic Hebrew, short lines easy to scan on a phone,
+a fitting emoji at the start of every line. Exactly this structure:
+Line 1: 🔥 / 🚨 opener + a short exciting hook in this style: {hook_style}. End it with 😱 / 🤯 / 😍
+Line 2: an emoji + what the item is, in plain words
 Blank line
-2-3 lines, each starting with ✨: concrete reasons to buy (how it looks, how to wear it, what to match it with), based only on the title; do not invent materials or details
+Optional: one line with an everyday problem it solves (e.g. "🔋 מכירים את הרגע שהטלפון עומד להיכבות דווקא כשצריך אותו?")
+1-2 lines with fitting emojis: what it does / how it looks, based only on the title; do not invent materials or details
+⭐ the real number of orders and the rating from the data (e.g. "⭐ מעל 5,000 נמכרו | דירוג 4.7"), only if orders are 100 or more
 Blank line
-💰 מחיר: ₪{{price}}
+🔥 רק ₪{{price}}!
 Never mention shipping or delivery times. Never mention discounts, "was" prices or sales. Address members in plural (אתם). Hebrew only, no English words.
 No markdown, no asterisks, no links, no hashtags, no em dashes.
 Items:
@@ -53,7 +56,8 @@ def make_post(now: datetime | None = None) -> dict | None:
         if len(items) < 3:
             continue
         _record_prices(items, now.date().isoformat())
-        listing = "\n".join(f"{n}. {i['title'][:120]} | ₪{i['price']} | {i['orders']} orders" for n, i in enumerate(items))
+        listing = "\n".join(f"{n}. {i['title'][:120]} | ₪{i['price']} | {i['orders']} orders | rating {i['rating']}%"
+                            for n, i in enumerate(items))
         raw = community._claude(ALI_PROMPT.format(label=label, context=community._context(now), items=listing,
                                               hook_style=random.choice(HOOK_STYLES)), 600)
         try:

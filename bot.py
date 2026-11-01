@@ -90,7 +90,8 @@ def do_ali():
     tracker.save(data)
     print("[bot] ✅ AliExpress find posted!")
     if community.whatsapp_product_slot(community.now_il()):
-        post_product_to_whatsapp([post["image"]] if post["image"] else [], post["text"], post["link"])
+        post_product_to_whatsapp([post["image"]] if post["image"] else [], post["text"], post["link"],
+                                 buy_label="👇 להזמנה מאליאקספרס 👇")
     return True
 
 
@@ -214,7 +215,7 @@ def do_product(run_number: int):
         post_text = generate_post(product, format_index)
         if not post_text:
             continue
-        guide = f"📖 פעם ראשונה מזמינים? המדריך המלא כאן:\n{ORDER_GUIDE}"
+        guide = f"📌 צריכים עזרה בהזמנה?\n📝 המדריך המלא כאן 👈 {ORDER_GUIDE}"
 
         print(f"[bot] Format #{format_index} preview:\n{post_text[:250]}...")
 
@@ -250,20 +251,27 @@ def run():
     print(f"SHUSHU Bot — {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}")
     print("="*50)
 
-    hour = community.now_il().hour
-    if not 9 <= hour <= 23:
-        print(f"[bot] Outside posting hours ({hour}:00 IL), skipping")
+    now = community.now_il()
+    # The bot runs every 10 minutes: community posts keep their hourly schedule (first run of the hour)
+    if 9 <= now.hour <= 23 and now.minute < community.SLOT_WINDOW:
+        community.run_scheduled(now)
+
+    slot = community.product_slot(now)
+    slot_key = f"{now.date().isoformat()}#{slot}"
+    data = tracker.load()
+    if slot < 0 or data.get("last_slot") == slot_key:
+        print(f"[bot] Not a product slot ({now:%H:%M} IL), nothing to post")
         return
 
     # Load and increment run counter
-    data = tracker.load()
     run_number = data.get("run_count", 0) + 1
     data["run_count"] = run_number
+    data["last_slot"] = slot_key
     tracker.save(data)
 
-    print(f"[bot] Run #{run_number}")
+    print(f"[bot] Run #{run_number}, slot {slot}")
 
-    if community.now_il().hour in community.ALI_HOURS and do_ali():
+    if slot % community.ALI_EVERY_N_SLOTS == 1 and do_ali():
         pass
     elif should_post_article(run_number):
         success = do_article()
@@ -273,7 +281,6 @@ def run():
     else:
         do_product(run_number)
 
-    community.run_scheduled()
     print(f"[bot] Done.")
 
 

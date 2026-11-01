@@ -53,8 +53,23 @@ EVENT_LIST_WA_HOUR = 12  # event day: the WhatsApp group gets the list an early 
 EVENT_LIST_TG_HOUR = 14
 
 # WhatsApp product slots; a community post scheduled for the same hour takes the slot
-WA_PRODUCT_HOURS = (12, 15, 18, 20)  # experiment from 01/11/2026: 4 product posts a day instead of 10 (churn)
-ALI_HOURS = (11, 15, 19)  # "המציאה של עלי" takes these product slots
+# Product slots: one post every SLOT_MINUTES inside the day's window (minutes from midnight).
+# The bot runs every 10 minutes; a run posts when it falls in a slot's first 10 minutes.
+SLOT_MINUTES = 80
+SLOT_WINDOW = 10
+DAY_WINDOWS = {4: (9 * 60, 22 * 60), 5: (7 * 60 + 30, 24 * 60)}  # Fri 09:00-22:00, Sat 07:30-00:00
+DEFAULT_WINDOW = (7 * 60 + 30, 23 * 60)  # Sun-Thu 07:30-23:00
+ALI_EVERY_N_SLOTS = 3  # every 3rd slot is "המציאה של עלי"
+
+
+def product_slot(now: datetime) -> int:
+    """Index of the product slot this run falls in, or -1 when it is not a posting time."""
+    start, end = DAY_WINDOWS.get(now.weekday(), DEFAULT_WINDOW)
+    minute = now.hour * 60 + now.minute
+    if not start <= minute <= end:
+        return -1
+    index, offset = divmod(minute - start, SLOT_MINUTES)
+    return index if offset < SLOT_WINDOW else -1
 
 
 def _event_tomorrow(now: datetime):
@@ -71,7 +86,7 @@ def whatsapp_product_slot(now: datetime) -> bool:
         return False
     if now.hour == EVENT_LIST_WA_HOUR and seasons.event_today(now.date()):
         return False
-    return now.hour in WA_PRODUCT_HOURS and (now.weekday(), now.hour) not in SCHEDULE
+    return (now.weekday(), now.hour) not in SCHEDULE
 
 
 def favorite_brand() -> str:
