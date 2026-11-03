@@ -1910,8 +1910,20 @@
     "welcome": "2026-11-02",
     "invite": "2026-11-02",
     "poll_close": "2026-10-30",
-    "trend": "2026-11-01"
+    "trend": "2026-11-01",
+    "poll": "2026-11-03"
   },
   "wa_group_size": 206,
-  "last_slot": "2026-11-03#4"
+  "last_slot": "2026-11-03#4",
+  "brand_poll": {
+    "message_id": 3018,
+    "options": [
+      "Celine",
+      "Gucci",
+      "Chanel",
+      "Ralph Lauren"
+    ],
+    "wa_id": "3EB01115F5BB661CC19D38",
+    "date": "2026-11-03"
+  }
 }
