@@ -839,9 +839,15 @@
       "lastmod": "2026-10-28T11:10:22.046263+00:00",
       "posted_at": "2026-11-06T07:01:29.029793",
       "telegram_message_ids": []
+    },
+    "efc01990-47f2-4f68-94c1-17aec5b9ad11": {
+      "url": "https://shushu-secret.com/product/efc01990-47f2-4f68-94c1-17aec5b9ad11",
+      "lastmod": "2026-02-22T09:33:01.061982+00:00",
+      "posted_at": "2026-11-06T09:40:52.692610",
+      "telegram_message_ids": []
     }
   },
-  "run_count": 173,
+  "run_count": 174,
   "category_pref": {
     "wa_id": "3EB049D21CE0904837867E",
     "votes": {
@@ -853,7 +859,6 @@
     "date": "2026-11-06"
   },
   "recent_roots": [
-    "clothing",
     "shoes",
     "accessories",
     "clothing",
@@ -862,7 +867,8 @@
     "clothing",
     "shoes",
     "bags",
-    "clothing"
+    "clothing",
+    "shoes"
   ],
   "ali_prices": {
     "1005006161308476": [
@@ -2582,7 +2588,7 @@
     "poll": "2026-11-03"
   },
   "wa_group_size": 204,
-  "last_slot": "2026-11-06#1",
+  "last_slot": "2026-11-06#2",
   "brand_poll": {
     "message_id": 3018,
     "options": [
