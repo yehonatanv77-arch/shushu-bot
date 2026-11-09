@@ -59,7 +59,7 @@ SLOT_MINUTES = 80
 SLOT_WINDOW = 10
 DAY_WINDOWS = {4: (9 * 60, 22 * 60), 5: (7 * 60 + 30, 24 * 60)}  # Fri 09:00-22:00, Sat 07:30-00:00
 DEFAULT_WINDOW = (7 * 60 + 30, 23 * 60)  # Sun-Thu 07:30-23:00
-ALI_EVERY_N_SLOTS = 3  # every 3rd slot is "המציאה של עלי"
+ALI_EVERY_N_SLOTS = 5  # every 5th slot is AliExpress (no orders from it yet, 09/11/2026)
 
 
 def product_slot(now: datetime) -> int:

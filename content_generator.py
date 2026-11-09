@@ -133,7 +133,7 @@ RULES:
 - Do NOT include any URL or link anywhere
 - Always name the brand (from Brand below) in line 2, if Brand is empty use only the item name
 
-TONE: excited, energetic, like a friend who found something amazing and can't wait to share it. Lots of fitting emojis, one at the start of every line.
+TONE: write it as a personal recommendation from me to a good friend, in first person ("מצאתי", "תקשיבו", "אני לא מתגבר על", "הייתי לוקח"), warm and honest, the way you text a friend about something you really liked. Not an ad voice, no salesman phrases. Still excited and short, with a fitting emoji at the start of every line.
 
 Wrap the hook (line 1) in single asterisks for bold, e.g. *🔥 בנות, תראו איזה ג'קט מצאנו לכן! 😍*. No other asterisks.
 FOMO: add ONE short line with a real sense of urgency where it fits best (usually right before the price), built only on true facts: high demand (many orders), it sold out before / came back, the season is starting, a limited sale or coupon. E.g. "⏳ זה נחטף מהר, אל תחכו" or "🚨 זה חזר למלאי!" only if true. Never invent stock counts or deadlines.
