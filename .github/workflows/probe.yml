@@ -24,4 +24,4 @@ jobs:
           WHATSAPP_GROUP_JID: ${{ secrets.WHATSAPP_GROUP_JID }}
           WHATSAPP_PAUSED: "0"
           PYTHONPATH: .
-        run: python tools/probe_evolution.py ${{ inputs.mode }}
+        run: if [ "${{ inputs.mode }}" = "ali" ]; then python tools/probe_ali.py; else python tools/probe_evolution.py ${{ inputs.mode }}; fi

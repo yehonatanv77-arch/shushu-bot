@@ -112,7 +112,36 @@ def search(keywords: str, category_id: str = "", page_size: int = 50) -> list[di
     if str(resp.get("resp_code")) != "200":
         print(f"[ali] API error: {resp.get('resp_code')} {resp.get('resp_msg')} {str(data.get('error_response', ''))[:200]}")
         return []
-    products = (resp.get("result") or {}).get("products", {}).get("product", [])
+    return _clean((resp.get("result") or {}).get("products", {}).get("product", []))
+
+
+# AliExpress's own curated sale lists (Ad Center > Featured Products), live during the 11.11 sale
+SALE_LISTS = ("1101-1118 11.11 Sale - Top Brands", "1101-1118 11.11 Sale - Big Save")
+SALE_END = "2026-11-18"
+
+
+def featured(promotion_name: str, page_size: int = 50) -> list[dict]:
+    """Clean items from one of AliExpress's featured promo lists ([] when the list is not live)."""
+    if not (APP_KEY and APP_SECRET):
+        return []
+    data = _call(
+        "aliexpress.affiliate.featuredpromo.products.get",
+        promotion_name=promotion_name,
+        page_no=1,
+        page_size=page_size,
+        target_currency="ILS",
+        target_language="HE",
+        country="IL",
+        tracking_id=TRACKING_ID,
+    )
+    resp = data.get("aliexpress_affiliate_featuredpromo_products_get_response", {}).get("resp_result", {})
+    if str(resp.get("resp_code")) != "200":
+        print(f"[ali] Featured list error: {resp.get('resp_code')} {resp.get('resp_msg')} {str(data.get('error_response', ''))[:200]}")
+        return []
+    return _clean((resp.get("result") or {}).get("products", {}).get("product", []))
+
+
+def _clean(products: list) -> list[dict]:
     clean = []
     for p in products:
         title = p.get("product_title", "")
