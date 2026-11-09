@@ -16,55 +16,55 @@ FORMATS = [
         "name": "secret_find",
         "instruction": """פורמט: גילוי סודי.
 פתח עם משפט אחד שמרגיש כמו סוד שאתה משתף עם חבר קרוב.
-תאר את המוצר דרך הרגשה שהוא מעורר — לא דרך פיצ'רים.
+תאר את המוצר דרך הרגשה שהוא מעורר, לא דרך פיצ'רים.
 סיים עם שאלה קצרה שגורמת לאנשים לחשוב.""",
     },
     {
         "name": "story_hook",
         "instruction": """פורמט: סיפור קצר.
 פתח עם תרחיש יומיומי שהקורא מזדהה איתו (30 שניות בבוקר, דקה לפני יציאה מהבית וכו').
-המוצר נכנס כפתרון טבעי לתרחיש — לא כפרסומת.
+המוצר נכנס כפתרון טבעי לתרחיש, לא כפרסומת.
 1-2 משפטים על הפריט עצמו.""",
     },
     {
         "name": "discovery_alert",
         "instruction": """פורמט: התרעת גילוי.
-פתח עם "מצאנו" / "נפל לנו" / "לא האמנו ש..." — תחושת גילוי בלתי צפוי.
+פתח עם "מצאנו" / "נפל לנו" / "לא האמנו ש...", תחושת גילוי בלתי צפוי.
 הצג את המוצר כאילו זה בדיוק הדבר שחיפשת בלי לדעת.
-קצר וחד — מקסימום 5 שורות.""",
+קצר וחד, מקסימום 5 שורות.""",
     },
     {
         "name": "vibe_check",
         "instruction": """פורמט: ויב צ'ק.
 תאר את האנרגיה / הסגנון / הפרסונה שהמוצר מייצג.
 מי לובש את זה? איפה? עם מה?
-תמונה ויזואלית חדה ואותנטית — בלי להגיד שום מילה על המחיר בהתחלה.""",
+תמונה ויזואלית חדה ואותנטית, בלי להגיד שום מילה על המחיר בהתחלה.""",
     },
     {
         "name": "honest_take",
         "instruction": """פורמט: דעה כנה.
 כתוב כאילו אתה בן אדם אמיתי שרוצה לשתף את הדעה שלו על הפריט.
-אפשר לציין גם דבר אחד שפחות מושלם — זה עושה את הפוסט אמין יותר.
+אפשר לציין גם דבר אחד שפחות מושלם, זה עושה את הפוסט אמין יותר.
 הגישה: "אני לא בטוח שזה בשביל כולם, אבל אם אתה/את...".""",
     },
     {
         "name": "trend_connect",
         "instruction": """פורמט: חיבור לטרנד.
 חבר את המוצר לטרנד עכשווי / עונת שנה / אירוע / מומנט תרבותי.
-אל תאמר "טרנדי" — הראה למה זה רלוונטי עכשיו בדיוק.
+אל תאמר "טרנדי", הראה למה זה רלוונטי עכשיו בדיוק.
 תחושת "זה הרגע הנכון לזה".""",
     },
     {
         "name": "compare_moment",
         "instruction": """פורמט: השוואה חכמה.
-פתח עם "במקום X..." / "במקום לשלם..."  — הצב את המוצר מול חלופה יקרה יותר.
-אל תתקיף מותגים אחרים — רק הצג את הערך.
+פתח עם "במקום X..." / "במקום לשלם..." , הצב את המוצר מול חלופה יקרה יותר.
+אל תתקיף מותגים אחרים, רק הצג את הערך.
 תחושת "וואו, לא ידעתי שיש כזה דבר".""",
     },
     {
         "name": "one_liner_punch",
         "instruction": """פורמט: פאנץ' קצר.
-פוסט קצרצר — מקסימום 4 שורות כולל הקישור.
+פוסט קצרצר, מקסימום 4 שורות כולל הקישור.
 משפט פתיחה חזק ובלתי צפוי.
 תיאור של 2 משפטים בלבד.
 CTA של מילה אחת.""",
@@ -79,7 +79,7 @@ CTA של מילה אחת.""",
     {
         "name": "weekend_find",
         "instruction": """פורמט: מציאת סוף שבוע.
-אנרגיה של גילוי מרגיע — לא דחיפות, אלא עונג.
+אנרגיה של גילוי מרגיע, לא דחיפות, אלא עונג.
 "שוטטנו..." / "נתקלנו..." / "כשהסתכלנו על..."
 תחושה של גלישה נינוחה שהולידה ממצא מוצלח.""",
     },
@@ -87,14 +87,14 @@ CTA של מילה אחת.""",
         "name": "before_after",
         "instruction": """פורמט: לפני ואחרי.
 תאר איך הלוק / התחושה / הסיטואציה נראית בלי הפריט הזה, ואיך היא נראית איתו.
-אל תהיה דרמטי — תהיה אמיתי וקצת הומוריסטי.
+אל תהיה דרמטי, תהיה אמיתי וקצת הומוריסטי.
 שורה אחת לפני, שורה אחת אחרי.""",
     },
     {
         "name": "gift_idea",
         "instruction": """פורמט: רעיון למתנה.
 הצג את המוצר כמתנה מושלמת לאחד מהפרופילים האלה: לעצמך / לחברה / לאמא / לאחות.
-אל תאמר "מושלם למתנה" — הראה למה בדיוק.
+אל תאמר "מושלם למתנה", הראה למה בדיוק.
 תחושה אישית ומחושבת.""",
     },
     {
@@ -133,16 +133,24 @@ RULES:
 - Do NOT include any URL or link anywhere
 - Always name the brand (from Brand below) in line 2, if Brand is empty use only the item name
 
-TONE: write it as a personal recommendation from me to a good friend, in first person ("מצאתי", "תקשיבו", "אני לא מתגבר על", "הייתי לוקח"), warm and honest, the way you text a friend about something you really liked. Not an ad voice, no salesman phrases. Still excited and short, with a fitting emoji at the start of every line.
+TONE: write it as a personal recommendation from me to a good friend, in first person ("מצאתי", "תקשיבו", "אני לא מתגבר על", "הייתי לוקח"), warm and honest, the way you text a friend about something you really liked. Not an ad voice, no salesman phrases. Still excited and short, with emojis where they feel natural.
 
 Wrap the hook (line 1) in single asterisks for bold, e.g. *🔥 בנות, תראו איזה ג'קט מצאנו לכן! 😍*. No other asterisks.
 FOMO: add ONE short line with a real sense of urgency where it fits best (usually right before the price), built only on true facts: high demand (many orders), it sold out before / came back, the season is starting, a limited sale or coupon. E.g. "⏳ זה נחטף מהר, אל תחכו" or "🚨 זה חזר למלאי!" only if true. Never invent stock counts or deadlines.
+
+SOUND HUMAN, NOT AI (very important):
+- Write like a real Israeli texting on WhatsApp: everyday slang (וואלה, סחתיין, אחלה, מטורף, בקיצור), short and a bit loose, not polished
+- Vary the rhythm: lines of different lengths, not every line built the same way, not every line ending with "!"
+- Emojis: 1-2 per line at most, and NOT on every line; skip the typical AI emojis ✨ 💫 🌟 and never stack them
+- No AI phrases: "בין אם... ובין אם", "לא רק... אלא גם", "מושלם ל", "הפריט האידיאלי", "שדרוג", "חוויה", "פשוט חובה", "מה שהופך את זה ל"
+- No lists of three adjectives, no rhetorical summaries at the end, no em dashes, no colons in the middle of sentences
+- Never invent a personal experience ("הלכתי איתן יום שלם"); recommend from opinion only ("הייתי לוקח את האפור", "זה בדיוק הסגנון שלי")
 
 STRUCTURE (exactly this):
 Line 1: 🔥 / 🚨 / 😍 style opener + a short exciting hook in this style: {hook_style}. End it with an emoji like 😍 / 😱 / 🤯
 Line 2: an emoji that fits the item + what the item is, in plain words (e.g. "💙 ג'קט ג'ינס Adidas Originals בגזרת אוברסייז אופנתית!")
 Blank line
-2-3 short lines with fitting emojis (✨ / 🧶 / 💎 / 🎁 / 📦): the strongest concrete details from the description (material, cut, finish, packaging)
+2-3 short lines (emoji like 🧶 / 💎 / 🎁 / 📦 only on some of them): the strongest concrete details from the description (material, cut, finish, packaging)
 🎨 colors / options, only if the description mentions them
 📏 מידות: [sizes]
 Blank line
@@ -152,7 +160,7 @@ Example of the tone and layout (a different item, do not copy the words):
 *🔥 בנות, תראו איזה ג'קט מצאנו לכן! 😍*
 💙 ג'קט ג'ינס בגזרת אוברסייז אופנתית!
 
-✨ פסים בצד ועיצוב וינטג' מושלם
+פסים בצד ועיצוב וינטג', וואלה יושב מעולה
 🎨 שני צבעים לבחירה: תכלת ושחור
 📏 מידות: S-XL
 
