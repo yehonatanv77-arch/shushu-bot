@@ -133,7 +133,7 @@ RULES:
 - Do NOT include any URL or link anywhere
 - Always name the brand (from Brand below) in line 2, if Brand is empty use only the item name
 
-TONE: write it as a personal recommendation from me to a good friend, in first person ("מצאתי", "תקשיבו", "אני לא מתגבר על", "הייתי לוקח"), warm and honest, the way you text a friend about something you really liked. Not an ad voice, no salesman phrases. Still excited and short, with emojis where they feel natural.
+TONE: write it as a personal recommendation from me to a good friend, in first person ("מצאתי", "תקשיבו", "תראו מה נפל לי"), warm and honest, the way you text a friend about something you really liked. Not an ad voice, no salesman phrases. Still excited and short, with emojis where they feel natural.
 
 Wrap the hook (line 1) in single asterisks for bold, e.g. *🔥 בנות, תראו איזה ג'קט מצאנו לכן! 😍*. No other asterisks.
 FOMO: add ONE short line with a real sense of urgency where it fits best (usually right before the price), built only on true facts: high demand (many orders), it sold out before / came back, the season is starting, a limited sale or coupon. E.g. "⏳ זה נחטף מהר, אל תחכו" or "🚨 זה חזר למלאי!" only if true. Never invent stock counts or deadlines.
@@ -144,14 +144,15 @@ SOUND HUMAN, NOT AI (very important):
 - Emojis: 1-2 per line at most, and NOT on every line; skip the typical AI emojis ✨ 💫 🌟 and never stack them
 - No AI phrases: "בין אם... ובין אם", "לא רק... אלא גם", "מושלם ל", "הפריט האידיאלי", "שדרוג", "חוויה", "פשוט חובה", "מה שהופך את זה ל"
 - No lists of three adjectives, no rhetorical summaries at the end, no em dashes, no colons in the middle of sentences
-- Never invent a personal experience ("הלכתי איתן יום שלם"); recommend from opinion only ("הייתי לוקח את האפור", "זה בדיוק הסגנון שלי")
+- Never invent a personal experience ("הלכתי איתן יום שלם")
+- Never push my personal taste on the reader ("הייתי לוקח את האפור", "זה הסגנון שלי"): show the item and let them decide
+- Do not highlight how many colors there are (no "9 צבעים לבחירה")
 
 STRUCTURE (exactly this):
 Line 1: 🔥 / 🚨 / 😍 style opener + a short exciting hook in this style: {hook_style}. End it with an emoji like 😍 / 😱 / 🤯
 Line 2: an emoji that fits the item + what the item is, in plain words (e.g. "💙 ג'קט ג'ינס Adidas Originals בגזרת אוברסייז אופנתית!")
 Blank line
 2-3 short lines (emoji like 🧶 / 💎 / 🎁 / 📦 only on some of them): the strongest concrete details from the description (material, cut, finish, packaging)
-🎨 colors / options, only if the description mentions them
 📏 מידות: [sizes]
 Blank line
 {israel_line}🤫 ב-SHUSHU רק [price]₪! 😱
@@ -161,7 +162,6 @@ Example of the tone and layout (a different item, do not copy the words):
 💙 ג'קט ג'ינס בגזרת אוברסייז אופנתית!
 
 פסים בצד ועיצוב וינטג', וואלה יושב מעולה
-🎨 שני צבעים לבחירה: תכלת ושחור
 📏 מידות: S-XL
 
 🤫 ב-SHUSHU רק 194₪! 😱

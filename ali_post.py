@@ -18,14 +18,16 @@ Below are AliExpress items (machine-translated titles) found when searching for:
 Pick the ONE item that best fits a stylish Israeli audience right now (prefer items that have a coupon) and actually matches "{label}"
 (skip items that are something else, like yarn when searching for coats, or off-season items).
 Then write a short post whose job is to make people buy, in Hebrew, short lines easy to scan on a phone.
-TONE: write it as a personal recommendation from me to a good friend, in first person ("מצאתי", "תקשיבו", "אני לא מתגבר על", "הייתי לוקח"), warm and honest, the way you text a friend about something you really liked. Not an ad voice, no salesman phrases. Still excited and short, with emojis where they feel natural.
+TONE: write it as a personal recommendation from me to a good friend, in first person ("מצאתי", "תקשיבו", "תראו מה נפל לי"), warm and honest, the way you text a friend about something you really liked. Not an ad voice, no salesman phrases. Still excited and short, with emojis where they feel natural.
 SOUND HUMAN, NOT AI (very important):
 - Write like a real Israeli texting on WhatsApp: everyday slang (וואלה, סחתיין, אחלה, מטורף, בקיצור), short and a bit loose, not polished
 - Vary the rhythm: lines of different lengths, not every line built the same way, not every line ending with "!"
 - Emojis: 1-2 per line at most, and NOT on every line; skip the typical AI emojis ✨ 💫 🌟 and never stack them
 - No AI phrases: "בין אם... ובין אם", "לא רק... אלא גם", "מושלם ל", "הפריט האידיאלי", "שדרוג", "חוויה", "פשוט חובה", "מה שהופך את זה ל"
 - No lists of three adjectives, no rhetorical summaries at the end, no em dashes, no colons in the middle of sentences
-- Never invent a personal experience ("הלכתי איתן יום שלם"); recommend from opinion only ("הייתי לוקח את האפור", "זה בדיוק הסגנון שלי")
+- Never invent a personal experience ("הלכתי איתן יום שלם")
+- Never push my personal taste on the reader ("הייתי לוקח את האפור", "זה הסגנון שלי"): show the item and let them decide
+- Do not highlight how many colors there are (no "9 צבעים לבחירה")
 
 Layout:
 Exactly this structure:
