@@ -117,7 +117,7 @@ def _candidates(now: datetime, posted: set):
             for i in items:
                 i["sale"] = True
             if items:
-                yield "מבצע 11.11 של אלי אקספרס", items
+                yield "fashion only: clothing, shoes, bags, jewelry, watches or fashion accessories (no phones, gadgets, tools, home or sports gear)", items
     queries = list(aliexpress.SEASON_QUERIES[seasons.season(now.date())])
     random.shuffle(queries)
     for cat, kw, label in queries[:3]:
