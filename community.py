@@ -98,7 +98,7 @@ def favorite_brand() -> str:
 
 
 # Comeback poll in the WhatsApp group: option -> root category slugs on the site
-CATEGORY_POLL_MIN_VOTES = 15
+CATEGORY_POLL_MIN_VOTES = 5  # small group: a handful of votes is already a clear signal
 CATEGORY_POLL_QUESTION = "מה הכי מעניין אתכם לראות כאן?"
 CATEGORY_POLL_OPTIONS = {
     "נעליים וסניקרס": {"shoes"},
@@ -142,6 +142,19 @@ def matches_season(entry: dict, now: datetime | None = None) -> bool:
     return _category_slugs.get(entry.get("category_id", ""), "") in slugs
 
 
+def _fix_option_names(votes: dict, options) -> dict:
+    """WhatsApp vote names can arrive with the Hebrew garbled into '�' characters.
+    Maps each one back to the poll option with the same word lengths."""
+    shape = lambda s: tuple(len(w) for w in s.split())
+    fixed = {}
+    for name, count in votes.items():
+        if name not in options:
+            same = [o for o in options if shape(o) == shape(name)]
+            name = same[0] if len(same) == 1 else name
+        fixed[name] = fixed.get(name, 0) + count
+    return fixed
+
+
 def refresh_category_pref(now: datetime):
     """Once a day, re-reads the comeback poll and stores the leading option."""
     data = tracker.load()
@@ -149,7 +162,7 @@ def refresh_category_pref(now: datetime):
     if pref.get("date") == now.date().isoformat():
         return
     poll_id = pref.get("wa_id") or find_poll_id(CATEGORY_POLL_QUESTION)
-    votes = get_poll_votes(poll_id) if poll_id else {}
+    votes = _fix_option_names(get_poll_votes(poll_id) if poll_id else {}, CATEGORY_POLL_OPTIONS)
     # Until enough people voted, keep a balanced mix instead of pushing one category
     winner = max(votes, key=votes.get) if sum(votes.values()) >= CATEGORY_POLL_MIN_VOTES else ""
     data["category_pref"] = {"wa_id": poll_id, "votes": votes, "winner": winner,
@@ -509,7 +522,7 @@ def refresh_warmup_poll():
     poll = data.get("warmup_poll") or {}
     if not poll.get("wa_id"):
         return
-    votes = get_poll_votes(poll["wa_id"])
+    votes = _fix_option_names(get_poll_votes(poll["wa_id"]), WARMUP_POLL_OPTIONS)
     poll["votes"] = votes
     poll["winner"] = max(votes, key=votes.get) if votes else ""
     data["warmup_poll"] = poll
