@@ -11,41 +11,66 @@ import aliexpress
 import community
 import seasons
 import tracker
-from content_generator import HOOK_STYLES
+from content_generator import HOOK_STYLES, israel_price_for
 
-ALI_PROMPT = """You write for SHUSHU, an Israeli fashion discovery community on Telegram and WhatsApp.
-Below are AliExpress items (machine-translated titles) found when searching for: {label}. {context}
-Pick the ONE item that best fits a stylish Israeli audience right now (prefer items that have a coupon) and actually matches "{label}"
-(skip items that are something else, like yarn when searching for coats, or off-season items).
-Then write a short post whose job is to make people buy, in Hebrew, short lines easy to scan on a phone.
-TONE: write it as a personal recommendation from me to a good friend, in first person ("מצאתי", "תקשיבו", "תראו מה נפל לי"), warm and honest, the way you text a friend about something you really liked. Not an ad voice, no salesman phrases. Still excited and short, with emojis where they feel natural.
+ALI_PROMPT = """You write for SHUSHU, an Israeli shopping community on Telegram and WhatsApp.
+Below are AliExpress deals (machine-translated titles) found when searching for: {label}. {context}
+Every item here is a real deal (a real price drop or a coupon). Pick the ONE item that best fits a stylish Israeli audience
+right now and actually matches "{label}" (skip items that are something else, like yarn when searching for coats, or off-season items).
+Then write a short post whose job is to make people BUY, in Hebrew, short lines easy to scan on a phone.
+
+TONE: a friend excitedly telling friends about a deal they found ("תראו מה מצאנו", "תקשיבו", "מה קורה עם המחיר הזה?!").
+Very excited and enthusiastic, but short. Not an ad voice, no salesman phrases.
 SOUND HUMAN, NOT AI (very important):
-- Write like a real Israeli texting on WhatsApp: everyday slang (וואלה, סחתיין, אחלה, מטורף, בקיצור), short and a bit loose, not polished
-- Vary the rhythm: lines of different lengths, not every line built the same way, not every line ending with "!"
-- Emojis: 1-2 per line at most, and NOT on every line; skip the typical AI emojis ✨ 💫 🌟 and never stack them
-- No AI phrases: "בין אם... ובין אם", "לא רק... אלא גם", "מושלם ל", "הפריט האידיאלי", "שדרוג", "חוויה", "פשוט חובה", "מה שהופך את זה ל"
-- No lists of three adjectives, no rhetorical summaries at the end, no em dashes, no colons in the middle of sentences
-- Never invent a personal experience ("הלכתי איתן יום שלם")
-- Never push my personal taste on the reader ("הייתי לוקח את האפור", "זה הסגנון שלי"): show the item and let them decide
-- Do not highlight how many colors there are (no "9 צבעים לבחירה")
+- Write like a real Israeli texting on WhatsApp: everyday slang (וואלה, סחתיין, אחלה, מטורף, בקיצור), a bit loose, not polished
+- Vary the rhythm: lines of different lengths, not every line ending with "!"
+- Emojis: 1-2 per line at most, not on every line; never ✨ 💫 🌟, never stacked
+- No AI phrases: "בין אם... ובין אם", "לא רק... אלא גם", "מושלם ל", "הפריט האידיאלי", "שדרוג", "חוויה", "פשוט חובה"
+- No lists of three adjectives, no summaries at the end, no em dashes
+- Never invent a personal experience, never push personal taste, do not highlight how many colors there are
+- Base every detail only on the title; do not invent materials, specs or brands
+- Never mention shipping or delivery times. Address members in plural (אתם). Hebrew only, except numbers and units (mAh, W).
 
-Layout:
-Exactly this structure:
-Line 1: 🔥 / 🚨 opener + a short exciting hook in this style: {hook_style}. End it with 😱 / 🤯 / 😍
-Line 2: an emoji + what the item is, in plain words
+STRUCTURE (exactly this):
+Line 1, bold with single asterisks: *🔥 + a short, very excited hook in this style: {hook_style}. End with 😱 / 🤯 / 😳*
 Blank line
-Optional: one line with an everyday problem it solves (e.g. "🔋 מכירים את הרגע שהטלפון עומד להיכבות דווקא כשצריך אותו?")
-1-2 lines with fitting emojis: what it does / how it looks, based only on the title; do not invent materials or details
-⭐ the real number of orders and the rating from the data (e.g. "⭐ מעל 5,000 נמכרו | דירוג 4.7"), only if orders are 100 or more
+An emoji that fits + what the item is, in plain words, with what makes it stand out
+Optional: an everyday problem it solves, as a question (e.g. "🔋 מכירים את הרגע שהטלפון עומד להיכבות דווקא כשצריך אותו?")
+One line: what it does / how to use or wear it
+⭐ real orders and rating from the data (e.g. "⭐ מעל 5,000 נמכרו | דירוג 4.7"), only if orders are 100 or more
 Blank line
-🔥 רק ₪{{price}}!
-Never mention shipping or delivery times. Never mention discounts, "was" prices or sales. Address members in plural (אתם). Hebrew only, no English words.
-Wrap the hook (line 1) in single asterisks for bold, e.g. *🔥 בנות, תראו איזה ג'קט מצאנו לכן! 😍*. No other asterisks.
-FOMO: add ONE short line with a real sense of urgency where it fits best (usually right before the price), built only on true facts: high demand (many orders), it sold out before / came back, the season is starting, a limited sale or coupon. E.g. "⏳ זה נחטף מהר, אל תחכו" or "🚨 זה חזר למלאי!" only if true. Never invent stock counts or deadlines.
-No other markdown, no links, no hashtags, no em dashes.
+If the item has "was" price: "📉 ירד מ־[was]₪ ל־[price]₪ השבוע" using the exact numbers from the data
+🔥 רק [price]₪!
+FOMO, one short line built only on true facts (the price drop, a coupon, many orders, the season), e.g. "⏳ מחיר כזה לא נשאר הרבה זמן"
+
+No other asterisks, no links, no hashtags.
+Example of the tone and layout (a different item, do not copy the words):
+*🚨 מה קורה עם המחיר הזה?! מטען מגנטי ב־38₪ 😱*
+
+🧲 מטען מגנטי שנצמד לטלפון וגם הופך למעמד לסרטונים
+🔋 מכירים את הרגע שהטלפון עומד להיכבות דווקא כשצריך אותו?
+⚡ 5,000mAh וטעינה אלחוטית, נכנס לכיס בקלות
+⭐ מעל 5,000 נמכרו | דירוג 4.7
+
+📉 ירד מ־61₪ ל־38₪ השבוע
+🔥 רק 38₪!
+⏳ מחיר כזה לא נשאר הרבה זמן
+
 Items:
 {items}
 Return only JSON: {{"index": <number>, "post": "..."}} or {{"index": -1}} if none fits."""
+
+MIN_DROP = 0.2  # a "real deal" = at least 20% under the highest price we saw in the last 30 days, or a coupon
+
+
+def _was_price(item_id: str, price, hist: dict) -> float:
+    """Highest earlier price we recorded for this item when today's is at least MIN_DROP lower, else 0."""
+    try:
+        now_p = float(price)
+        before = max(float(p) for d, p in hist.get(item_id, [])[:-1])
+    except (TypeError, ValueError):
+        return 0
+    return before if now_p <= before * (1 - MIN_DROP) else 0
 
 
 def _record_prices(items: list[dict], today: str):
@@ -67,11 +92,20 @@ def make_post(now: datetime | None = None) -> dict | None:
     random.shuffle(queries)
     for cat, kw, label in queries[:3]:
         items = [i for i in aliexpress.search(kw, cat) if i["id"] not in posted][:15]
-        if len(items) < 3:
+        if not items:
             continue
         _record_prices(items, now.date().isoformat())
-        listing = "\n".join(f"{n}. {i['title'][:120]} | ₪{i['price']} | {i['orders']} orders | rating {i['rating']}%{' | has coupon' if i.get('promo') else ''}"
-                            for n, i in enumerate(items))
+        hist = tracker.load().get("ali_prices", {})
+        for i in items:
+            i["was"] = _was_price(i["id"], i["price"], hist)
+        # Only real deals go out: a real price drop or a coupon
+        items = [i for i in items if i["was"] or i.get("promo")]
+        if not items:
+            continue
+        listing = "\n".join(
+            f"{n}. {i['title'][:120]} | ₪{i['price']}" + (f" | was ₪{i['was']:g}" if i["was"] else "")
+            + f" | {i['orders']} orders | rating {i['rating']}%" + (" | has coupon" if i.get("promo") else "")
+            for n, i in enumerate(items))
         raw = community._claude(ALI_PROMPT.format(label=label, context=community._context(now), items=listing,
                                               hook_style=random.choice(HOOK_STYLES)), 600)
         try:
@@ -83,6 +117,13 @@ def make_post(now: datetime | None = None) -> dict | None:
             continue
         it = items[idx]
         text = pick["post"].replace("{price}", str(it["price"]))
+        il = israel_price_for(it["title"][:120])
+        try:
+            if il and il > float(it["price"]) * 1.5:
+                # Added in code so the number is exactly what the search found
+                text = text.replace("\n🔥 רק", f"\n🇮🇱 דומים בארץ סביב {il}₪\n🔥 רק", 1)
+        except (TypeError, ValueError):
+            pass
         promo = it.get("promo") or {}
         if promo:
             # Added in code, not by Claude, so the coupon is always copied exactly

@@ -204,7 +204,11 @@ Return ONLY the post text."""
 
 def israel_price(product: Product) -> int:
     """Looks up what this item (or the same model) costs in Israeli stores; 0 when not found."""
-    query = f"{product.brand} {product.name_en or product.name}".strip()
+    return israel_price_for(f"{product.brand} {product.name_en or product.name}".strip())
+
+
+def israel_price_for(query: str) -> int:
+    """Regular price in Israeli stores for a free-text item description; 0 when not found."""
     try:
         msg = client.messages.create(
             model="claude-sonnet-4-6",
