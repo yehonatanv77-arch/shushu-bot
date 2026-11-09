@@ -995,9 +995,15 @@
       "lastmod": "2026-10-28T13:19:51.327603+00:00",
       "posted_at": "2026-11-09T05:31:14.314223",
       "telegram_message_ids": []
+    },
+    "f5ed2f96-357e-47b8-9ff3-d8cba007163a": {
+      "url": "https://shushu-secret.com/product/f5ed2f96-357e-47b8-9ff3-d8cba007163a",
+      "lastmod": "2026-01-27T13:22:48.511253+00:00",
+      "posted_at": "2026-11-09T08:10:44.655480",
+      "telegram_message_ids": []
     }
   },
-  "run_count": 208,
+  "run_count": 209,
   "category_pref": {
     "wa_id": "3EB049D21CE0904837867E",
     "votes": {
@@ -1009,7 +1015,6 @@
     "date": "2026-11-09"
   },
   "recent_roots": [
-    "bags",
     "shoes",
     "clothing",
     "accessories",
@@ -1018,7 +1023,8 @@
     "clothing",
     "shoes",
     "bags",
-    "clothing"
+    "clothing",
+    "shoes"
   ],
   "ali_prices": {
     "1005006161308476": [
@@ -3305,7 +3311,7 @@
     "poll": "2026-11-03"
   },
   "wa_group_size": 194,
-  "last_slot": "2026-11-09#1",
+  "last_slot": "2026-11-09#2",
   "brand_poll": {},
   "favorite_brand": {
     "brand": "Celine",
