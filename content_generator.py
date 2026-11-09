@@ -115,14 +115,13 @@ CTA של מילה אחת.""",
 
 # Opening-line styles, one picked at random per post so the feed never starts the same way twice
 HOOK_STYLES = [
-    'price vs. look: the price and what it looks like it costs (only if believable), e.g. "ג\'קט עור שחור ב-189 ₪ שנראה כמו 900"',
-    'a question the reader answers yes to, e.g. "מחפשות ג\'קט שהולך גם לעבודה וגם לערב?"',
-    'the problem it solves, e.g. "נגמרו הבקרים של אין לי מה ללבוש"',
-    'a bold short statement about the item, e.g. "זה הג\'קט של החורף הזה"',
-    'the occasion, e.g. "לדייט של סוף השבוע: ג\'קט עור שחור"',
-    'the main feeling or benefit, e.g. "נוח כמו טרנינג, נראה כמו מליון דולר"',
-    'the season or the moment, e.g. "הקור הגיע, וזה מה שלובשים עליו"',
+    '"תראו מה נחת אצלנו" + the item, e.g. "תראו מה נחת אצלנו! ג\'קט הג\'ינס של אדידס"',
+    '"תראו מה הגיע אלינו" + the item, e.g. "תראו מה הגיע אלינו! הסריג של ראלף לורן"',
+    '"תקשיבו, הדגם של" + brand and model, e.g. "תקשיבו, הדגם של ניו באלאנס שכולם מחפשים"',
+    '"תראו מה מצאנו לכם" + the item, e.g. "בנות, תראו איזה ג\'קט מצאנו לכן"',
 ]
+# Used instead when we know the Israel price: open with it, the SHUSHU price comes as the surprise
+PRICE_HOOK = 'open with the Israel price as a teaser, e.g. "{il}₪ על ניו באלאנס? חכו שתראו את המחיר הזה!"'
 
 PRODUCT_POST_PROMPT = """You are the voice of SHUSHU, an Israeli shopping community. Your job is to make people BUY.
 
@@ -133,7 +132,7 @@ RULES:
 - Do NOT include any URL or link anywhere
 - Always name the brand (from Brand below) in line 2, if Brand is empty use only the item name
 
-TONE: write it as a personal recommendation from me to a good friend, in first person ("מצאתי", "תקשיבו", "תראו מה נפל לי"), warm and honest, the way you text a friend about something you really liked. Not an ad voice, no salesman phrases. Still excited and short, with emojis where they feel natural.
+TONE: write it as a personal recommendation from me to a good friend, in first person ("מצאתי", "תקשיבו", "תראו מה נפל לי"), warm and honest, the way you text a friend about something you really liked. Not an ad voice, no salesman phrases. Very excited and enthusiastic, but short, with emojis where they feel natural.
 
 Wrap the hook (line 1) in single asterisks for bold, e.g. *🔥 בנות, תראו איזה ג'קט מצאנו לכן! 😍*. No other asterisks.
 FOMO: add ONE short line with a real sense of urgency where it fits best (usually right before the price), built only on true facts: high demand (many orders), it sold out before / came back, the season is starting, a limited sale or coupon. E.g. "⏳ זה נחטף מהר, אל תחכו" or "🚨 זה חזר למלאי!" only if true. Never invent stock counts or deadlines.
@@ -149,22 +148,25 @@ SOUND HUMAN, NOT AI (very important):
 - Do not highlight how many colors there are (no "9 צבעים לבחירה")
 
 STRUCTURE (exactly this):
-Line 1: 🔥 / 🚨 / 😍 style opener + a short exciting hook in this style: {hook_style}. End it with an emoji like 😍 / 😱 / 🤯
-Line 2: an emoji that fits the item + what the item is, in plain words (e.g. "💙 ג'קט ג'ינס Adidas Originals בגזרת אוברסייז אופנתית!")
+Line 1: 🔥 + a short, very excited hook in this style: {hook_style}. End it with 😍 / 😳 / 😱
 Blank line
-2-3 short lines (emoji like 🧶 / 💎 / 🎁 / 📦 only on some of them): the strongest concrete details from the description (material, cut, finish, packaging)
-📏 מידות: [sizes]
+An emoji that fits the item + brand and model + one vivid line about what makes it stand out
+An emoji + how to wear it or what it adds to a look (one line)
 Blank line
-{israel_line}🤫 ב-SHUSHU רק [price]₪! 😱
+{israel_line}🤫 ב-SHUSHU רק [price]₪! + what comes with it if the description says so (e.g. "כולל קופסה 📦")
+Blank line
+📏 מידות [sizes]
 
 Example of the tone and layout (a different item, do not copy the words):
-*🔥 בנות, תראו איזה ג'קט מצאנו לכן! 😍*
-💙 ג'קט ג'ינס בגזרת אוברסייז אופנתית!
+*🔥 650₪ על ניו באלאנס? חכו שתראו את המחיר הזה! 😳*
 
-פסים בצד ועיצוב וינטג', וואלה יושב מעולה
-📏 מידות: S-XL
+👟 ניו באלאנס 9060, הדגם עם הסוליה העבה והלוק שאי אפשר להתעלם ממנו!
+😍 עם ג'ינס או עם טרנינג, הנעל הזאת עושה את כל ההופעה
 
-🤫 ב-SHUSHU רק 194₪! 😱
+🇮🇱 דגמים דומים של המותג בארץ סביב 650₪
+🤫 ב-SHUSHU רק 184₪! כולל קופסה 📦
+
+📏 מידות 36 עד 47
 
 Angle for the hook and reasons (use it as inspiration only, keep the structure): {format_instruction}
 
@@ -235,12 +237,12 @@ def generate_post(product: Product, format_index: int) -> str:
     if il_price and ours and il_price > ours * 1.3:
         print(f"[content] Israel price: {il_price}")
         # The model writes this line as-is, then a blank line before the vault price
-        israel_line = f"🇮🇱 [the item type in plural, e.g. ג'קטים דומים] של המותג בארץ: כ־{il_price}₪\n\n"
+        israel_line = f"🇮🇱 דגמים דומים של המותג בארץ סביב {il_price}₪\n"
 
     prompt = PRODUCT_POST_PROMPT.format(
         format_name=fmt["name"],
         format_instruction=fmt["instruction"],
-        hook_style=random.choice(HOOK_STYLES),
+        hook_style=PRICE_HOOK.format(il=il_price) if israel_line and random.random() < 0.5 else random.choice(HOOK_STYLES),
         israel_line=israel_line,
         name=product.name_en or product.name,
         brand=product.brand or "",
