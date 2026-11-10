@@ -3580,11 +3580,21 @@
     "invite": "2026-11-09",
     "poll_close": "2026-11-06",
     "trend": "2026-11-08",
-    "poll": "2026-11-03"
+    "poll": "2026-11-10"
   },
   "wa_group_size": 193,
   "last_slot": "2026-11-10#4",
-  "brand_poll": {},
+  "brand_poll": {
+    "message_id": 3269,
+    "options": [
+      "Saint Laurent",
+      "Tommy",
+      "New Balance",
+      "Chanel"
+    ],
+    "wa_id": "3EB0BFCE218359F9DED93E",
+    "date": "2026-11-10"
+  },
   "favorite_brand": {
     "brand": "Celine",
     "until": "2026-11-13",
