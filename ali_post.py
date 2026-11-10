@@ -156,6 +156,9 @@ def make_post(now: datetime | None = None) -> dict | None:
             continue
         it = items[idx]
         text = pick["post"]
+        if not it.get("sale"):
+            # The 11.11 deadline is only true for items from the sale lists
+            text = "\n".join(l for l in text.split("\n") if "11.11" not in l and "18/11" not in l)
         il = israel_price_for(it["title"][:120])
         if il and il > _under(it["price"]) * 1.5:
             # Added in code so the number is exactly what the search found
