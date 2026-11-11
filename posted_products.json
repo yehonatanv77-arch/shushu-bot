@@ -3830,7 +3830,8 @@
     "poll_close": "2026-11-06",
     "trend": "2026-11-08",
     "poll": "2026-11-10",
-    "event": "2026-11-10"
+    "event": "2026-11-10",
+    "event_list_wa": "2026-11-11"
   },
   "wa_group_size": 190,
   "last_slot": "2026-11-11#3",
@@ -3854,5 +3855,66 @@
       "Chanel": 0,
       "Ralph Lauren": 1
     }
+  },
+  "event_list": {
+    "date": "2026-11-11",
+    "items": [
+      {
+        "id": "98021870-4d0d-4d65-8188-8ba903759305",
+        "name": "אדידס גאזל אינדור בגווני אדום וכתום",
+        "name_en": "Adidas Gazelle Indoor Red/Orange",
+        "price": 149.0,
+        "category_id": "9a4e7159-11ad-4a88-a784-5029eed17b84"
+      },
+      {
+        "id": "3f7d45e8-cbdb-4264-91ff-1bd3df099712",
+        "name": "ג'קט ג'ינס מנומר של קלווין קליין",
+        "name_en": "Calvin Klein Leopard Print Denim Jacket",
+        "price": 103.0,
+        "category_id": "81a4faf3-96f3-456e-be10-4d9060ad55b3"
+      },
+      {
+        "id": "9b43554e-693b-4a09-abe5-66f8484a8451",
+        "name": "מעיל פוך מבריק Polo Ralph Lauren",
+        "name_en": "Polo Ralph Lauren Shiny Down Puffer Jacket",
+        "price": 137.0,
+        "category_id": "81a4faf3-96f3-456e-be10-4d9060ad55b3"
+      },
+      {
+        "id": "7b4db0fa-a512-47c6-8d05-0a884ffc2871",
+        "name": "נעלי UGG GoldenGlow Clog",
+        "name_en": "UGG GoldenGlow Clogs",
+        "price": 149.0,
+        "category_id": "04226081-85db-4be0-9b3d-c3e0e7bf1758"
+      },
+      {
+        "id": "7d342271-2e7c-4e55-b436-68250abcbc7c",
+        "name": "חולצת טי-שירט דיור בעיצוב קלאסי",
+        "name_en": "Dior Classic Logo T-Shirt",
+        "price": 147.0,
+        "category_id": "ab027234-de38-4cb7-8801-d61a4d730060"
+      },
+      {
+        "id": "11edd4fd-4686-489f-b13c-608681228096",
+        "name": "חולצת פולו קלאסית לגברים Gant",
+        "name_en": "Gant Men's Classic Piqué Polo Shirt",
+        "price": 128.0,
+        "category_id": "ab027234-de38-4cb7-8801-d61a4d730060"
+      },
+      {
+        "id": "5f1ace00-7a86-4122-9e5d-04fe4bbb3fd9",
+        "name": "מכנסי Alo Yoga רגל רחבה",
+        "name_en": "Alo Yoga Wide-Leg Pants",
+        "price": 124.0,
+        "category_id": "5a8b79fa-f6a0-47c1-99c5-09095a950839"
+      },
+      {
+        "id": "2d99d91c-5de2-4927-8c35-283617c6613b",
+        "name": "מכנסי טרנינג Scuba של לולולמון",
+        "name_en": "Lululemon Scuba Oversized Joggers",
+        "price": 118.0,
+        "category_id": "18cf0cec-b4e2-49c5-98d7-d78155ebaf2f"
+      }
+    ]
   }
 }
