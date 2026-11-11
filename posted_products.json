@@ -4133,7 +4133,7 @@
   ],
   "community": {
     "fun_poll": "2026-11-05",
-    "welcome": "2026-11-10",
+    "welcome": "2026-11-11",
     "invite": "2026-11-10",
     "poll_close": "2026-11-06",
     "trend": "2026-11-08",
@@ -4142,7 +4142,7 @@
     "event_list_wa": "2026-11-11",
     "event_list_tg": "2026-11-11"
   },
-  "wa_group_size": 190,
+  "wa_group_size": 186,
   "last_slot": "2026-11-11#7",
   "brand_poll": {
     "message_id": 3269,
