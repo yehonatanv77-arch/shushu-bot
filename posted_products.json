@@ -4877,7 +4877,8 @@
     "poll": "2026-11-10",
     "event": "2026-11-10",
     "event_list_wa": "2026-11-11",
-    "event_list_tg": "2026-11-11"
+    "event_list_tg": "2026-11-11",
+    "warmup": "2026-11-13"
   },
   "wa_group_size": 185,
   "last_slot": "2026-11-13#8",
