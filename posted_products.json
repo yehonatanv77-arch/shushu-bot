@@ -1181,9 +1181,15 @@
       "lastmod": "2026-10-28T13:11:06.018888+00:00",
       "posted_at": "2026-11-13T09:41:04.997535",
       "telegram_message_ids": []
+    },
+    "ea123499-d594-4bf4-b44d-fd47e759fa6c": {
+      "url": "https://shushu-secret.com/product/ea123499-d594-4bf4-b44d-fd47e759fa6c",
+      "lastmod": "2026-05-12T10:18:42.852655+00:00",
+      "posted_at": "2026-11-13T11:01:34.535450",
+      "telegram_message_ids": []
     }
   },
-  "run_count": 257,
+  "run_count": 258,
   "category_pref": {
     "wa_id": "3EB049D21CE0904837867E",
     "votes": {
@@ -1195,7 +1201,6 @@
     "date": "2026-11-13"
   },
   "recent_roots": [
-    "bags",
     "clothing",
     "shoes",
     "bags",
@@ -1204,7 +1209,8 @@
     "watches",
     "clothing",
     "shoes",
-    "clothing"
+    "clothing",
+    "shoes"
   ],
   "ali_prices": {
     "1005006161308476": [
@@ -4582,7 +4588,7 @@
     "fun_poll": "2026-11-12",
     "welcome": "2026-11-12",
     "invite": "2026-11-12",
-    "poll_close": "2026-11-06",
+    "poll_close": "2026-11-13",
     "trend": "2026-11-08",
     "poll": "2026-11-10",
     "event": "2026-11-10",
@@ -4590,26 +4596,16 @@
     "event_list_tg": "2026-11-11"
   },
   "wa_group_size": 185,
-  "last_slot": "2026-11-13#2",
-  "brand_poll": {
-    "message_id": 3269,
-    "options": [
-      "Saint Laurent",
-      "Tommy",
-      "New Balance",
-      "Chanel"
-    ],
-    "wa_id": "3EB0BFCE218359F9DED93E",
-    "date": "2026-11-10"
-  },
+  "last_slot": "2026-11-13#3",
+  "brand_poll": {},
   "favorite_brand": {
-    "brand": "Celine",
-    "until": "2026-11-13",
+    "brand": "New Balance",
+    "until": "2026-11-20",
     "votes": {
-      "Celine": 1,
-      "Gucci": 1,
-      "Chanel": 0,
-      "Ralph Lauren": 1
+      "Saint Laurent": 0,
+      "Tommy": 0,
+      "New Balance": 5,
+      "Chanel": 0
     }
   },
   "event_list": {
