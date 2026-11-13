@@ -1187,9 +1187,15 @@
       "lastmod": "2026-05-12T10:18:42.852655+00:00",
       "posted_at": "2026-11-13T11:01:34.535450",
       "telegram_message_ids": []
+    },
+    "1e25b473-9651-468c-b9c0-392b7257bdda": {
+      "url": "https://shushu-secret.com/product/1e25b473-9651-468c-b9c0-392b7257bdda",
+      "lastmod": "2026-02-04T10:37:23.922643+00:00",
+      "posted_at": "2026-11-13T12:20:49.656623",
+      "telegram_message_ids": []
     }
   },
-  "run_count": 258,
+  "run_count": 259,
   "category_pref": {
     "wa_id": "3EB049D21CE0904837867E",
     "votes": {
@@ -1201,7 +1207,6 @@
     "date": "2026-11-13"
   },
   "recent_roots": [
-    "clothing",
     "shoes",
     "bags",
     "clothing",
@@ -1210,7 +1215,8 @@
     "clothing",
     "shoes",
     "clothing",
-    "shoes"
+    "shoes",
+    "accessories"
   ],
   "ali_prices": {
     "1005006161308476": [
@@ -4596,7 +4602,7 @@
     "event_list_tg": "2026-11-11"
   },
   "wa_group_size": 185,
-  "last_slot": "2026-11-13#3",
+  "last_slot": "2026-11-13#4",
   "brand_poll": {},
   "favorite_brand": {
     "brand": "New Balance",
