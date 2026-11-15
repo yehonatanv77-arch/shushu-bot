@@ -1225,7 +1225,7 @@
       "telegram_message_ids": []
     }
   },
-  "run_count": 283,
+  "run_count": 284,
   "category_pref": {
     "wa_id": "3EB049D21CE0904837867E",
     "votes": {
@@ -5160,6 +5160,12 @@
         "2026-11-15",
         "191.39"
       ]
+    ],
+    "32821104398": [
+      [
+        "2026-11-15",
+        "109.39"
+      ]
     ]
   },
   "ali_posted": {
@@ -5229,7 +5235,7 @@
     "warmup": "2026-11-13"
   },
   "wa_group_size": 184,
-  "last_slot": "2026-11-15#5",
+  "last_slot": "2026-11-15#6",
   "brand_poll": {},
   "favorite_brand": {
     "brand": "New Balance",
