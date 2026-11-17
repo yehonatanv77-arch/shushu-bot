@@ -5576,7 +5576,7 @@
     "event": "2026-11-10",
     "event_list_wa": "2026-11-11",
     "event_list_tg": "2026-11-11",
-    "warmup": "2026-11-13"
+    "warmup": "2026-11-17"
   },
   "wa_group_size": 182,
   "last_slot": "2026-11-17#9",
@@ -5661,5 +5661,10 @@
         "category_id": "18cf0cec-b4e2-49c5-98d7-d78155ebaf2f"
       }
     ]
+  },
+  "warmup_poll": {
+    "message_id": 3460,
+    "wa_id": "3EB01D75E28104B4E3246F",
+    "winner": ""
   }
 }
