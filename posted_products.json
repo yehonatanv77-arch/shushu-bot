@@ -5492,7 +5492,7 @@
     "invite": "2026-11-16",
     "poll_close": "2026-11-13",
     "trend": "2026-11-08",
-    "poll": "2026-11-10",
+    "poll": "2026-11-17",
     "event": "2026-11-10",
     "event_list_wa": "2026-11-11",
     "event_list_tg": "2026-11-11",
@@ -5500,7 +5500,17 @@
   },
   "wa_group_size": 184,
   "last_slot": "2026-11-17#4",
-  "brand_poll": {},
+  "brand_poll": {
+    "message_id": 3459,
+    "options": [
+      "Ralph Lauren",
+      "Adidas",
+      "Alo",
+      "Gucci"
+    ],
+    "wa_id": "3EB0F57AFD6E8F8620B877",
+    "date": "2026-11-17"
+  },
   "favorite_brand": {
     "brand": "New Balance",
     "until": "2026-11-20",
