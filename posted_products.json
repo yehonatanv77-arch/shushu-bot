@@ -1225,7 +1225,7 @@
       "telegram_message_ids": []
     }
   },
-  "run_count": 340,
+  "run_count": 341,
   "category_pref": {
     "wa_id": "3EB049D21CE0904837867E",
     "votes": {
@@ -6370,7 +6370,7 @@
     "fun_poll": "2026-11-12",
     "welcome": "2026-11-19",
     "invite": "2026-11-19",
-    "poll_close": "2026-11-13",
+    "poll_close": "2026-11-20",
     "trend": "2026-11-08",
     "poll": "2026-11-17",
     "event": "2026-11-10",
@@ -6379,26 +6379,16 @@
     "warmup": "2026-11-17"
   },
   "wa_group_size": 182,
-  "last_slot": "2026-11-20#2",
-  "brand_poll": {
-    "message_id": 3459,
-    "options": [
-      "Ralph Lauren",
-      "Adidas",
-      "Alo",
-      "Gucci"
-    ],
-    "wa_id": "3EB0F57AFD6E8F8620B877",
-    "date": "2026-11-17"
-  },
+  "last_slot": "2026-11-20#3",
+  "brand_poll": {},
   "favorite_brand": {
-    "brand": "New Balance",
-    "until": "2026-11-20",
+    "brand": "Adidas",
+    "until": "2026-11-27",
     "votes": {
-      "Saint Laurent": 0,
-      "Tommy": 0,
-      "New Balance": 5,
-      "Chanel": 0
+      "Ralph Lauren": 1,
+      "Adidas": 4,
+      "Alo": 0,
+      "Gucci": 2
     }
   },
   "event_list": {
