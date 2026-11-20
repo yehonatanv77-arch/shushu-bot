@@ -1225,7 +1225,7 @@
       "telegram_message_ids": []
     }
   },
-  "run_count": 346,
+  "run_count": 347,
   "category_pref": {
     "wa_id": "3EB049D21CE0904837867E",
     "votes": {
@@ -6453,7 +6453,7 @@
   "community": {
     "fun_poll": "2026-11-12",
     "welcome": "2026-11-20",
-    "invite": "2026-11-19",
+    "invite": "2026-11-20",
     "poll_close": "2026-11-20",
     "trend": "2026-11-08",
     "poll": "2026-11-17",
@@ -6463,7 +6463,7 @@
     "warmup": "2026-11-17"
   },
   "wa_group_size": 182,
-  "last_slot": "2026-11-20#8",
+  "last_slot": "2026-11-20#9",
   "brand_poll": {},
   "favorite_brand": {
     "brand": "Adidas",
