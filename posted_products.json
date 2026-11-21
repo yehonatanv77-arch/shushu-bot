@@ -1225,7 +1225,7 @@
       "telegram_message_ids": []
     }
   },
-  "run_count": 357,
+  "run_count": 358,
   "category_pref": {
     "wa_id": "3EB049D21CE0904837867E",
     "votes": {
@@ -6609,7 +6609,7 @@
     "warmup": "2026-11-17"
   },
   "wa_group_size": 181,
-  "last_slot": "2026-11-21#9",
+  "last_slot": "2026-11-21#10",
   "brand_poll": {},
   "favorite_brand": {
     "brand": "Adidas",
