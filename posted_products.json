@@ -7302,7 +7302,7 @@
     "invite": "2026-11-23",
     "poll_close": "2026-11-20",
     "trend": "2026-11-08",
-    "poll": "2026-11-17",
+    "poll": "2026-11-24",
     "event": "2026-11-10",
     "event_list_wa": "2026-11-11",
     "event_list_tg": "2026-11-11",
@@ -7310,7 +7310,17 @@
   },
   "wa_group_size": 181,
   "last_slot": "2026-11-24#4",
-  "brand_poll": {},
+  "brand_poll": {
+    "message_id": 3462,
+    "options": [
+      "Adidas",
+      "Saint Laurent",
+      "Celine",
+      "Miu Miu"
+    ],
+    "wa_id": "3EB0C49B5672C7091084C7",
+    "date": "2026-11-24"
+  },
   "favorite_brand": {
     "brand": "Adidas",
     "until": "2026-11-27",
