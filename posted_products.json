@@ -1225,7 +1225,7 @@
       "telegram_message_ids": []
     }
   },
-  "run_count": 415,
+  "run_count": 416,
   "category_pref": {
     "wa_id": "3EB049D21CE0904837867E",
     "votes": {
@@ -8119,7 +8119,7 @@
     "warmup": "2026-11-17"
   },
   "wa_group_size": 180,
-  "last_slot": "2026-11-26#7",
+  "last_slot": "2026-11-26#8",
   "brand_poll": {
     "message_id": 3462,
     "options": [
