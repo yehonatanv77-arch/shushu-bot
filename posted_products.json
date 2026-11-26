@@ -8108,7 +8108,7 @@
   ],
   "community": {
     "fun_poll": "2026-11-12",
-    "welcome": "2026-11-25",
+    "welcome": "2026-11-26",
     "invite": "2026-11-25",
     "poll_close": "2026-11-20",
     "trend": "2026-11-08",
@@ -8118,7 +8118,7 @@
     "event_list_tg": "2026-11-11",
     "warmup": "2026-11-17"
   },
-  "wa_group_size": 181,
+  "wa_group_size": 180,
   "last_slot": "2026-11-26#7",
   "brand_poll": {
     "message_id": 3462,
