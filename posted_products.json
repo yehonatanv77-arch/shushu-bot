@@ -8244,55 +8244,13 @@
     }
   },
   "event_list": {
-    "date": "2026-11-11",
+    "date": "2026-11-27",
     "items": [
       {
-        "id": "98021870-4d0d-4d65-8188-8ba903759305",
-        "name": "אדידס גאזל אינדור בגווני אדום וכתום",
-        "name_en": "Adidas Gazelle Indoor Red/Orange",
-        "price": 149.0,
-        "category_id": "9a4e7159-11ad-4a88-a784-5029eed17b84"
-      },
-      {
-        "id": "3f7d45e8-cbdb-4264-91ff-1bd3df099712",
-        "name": "ג'קט ג'ינס מנומר של קלווין קליין",
-        "name_en": "Calvin Klein Leopard Print Denim Jacket",
-        "price": 103.0,
-        "category_id": "81a4faf3-96f3-456e-be10-4d9060ad55b3"
-      },
-      {
-        "id": "9b43554e-693b-4a09-abe5-66f8484a8451",
-        "name": "מעיל פוך מבריק Polo Ralph Lauren",
-        "name_en": "Polo Ralph Lauren Shiny Down Puffer Jacket",
-        "price": 137.0,
-        "category_id": "81a4faf3-96f3-456e-be10-4d9060ad55b3"
-      },
-      {
-        "id": "7b4db0fa-a512-47c6-8d05-0a884ffc2871",
-        "name": "נעלי UGG GoldenGlow Clog",
-        "name_en": "UGG GoldenGlow Clogs",
-        "price": 149.0,
-        "category_id": "04226081-85db-4be0-9b3d-c3e0e7bf1758"
-      },
-      {
-        "id": "7d342271-2e7c-4e55-b436-68250abcbc7c",
-        "name": "חולצת טי-שירט דיור בעיצוב קלאסי",
-        "name_en": "Dior Classic Logo T-Shirt",
-        "price": 147.0,
-        "category_id": "ab027234-de38-4cb7-8801-d61a4d730060"
-      },
-      {
-        "id": "11edd4fd-4686-489f-b13c-608681228096",
-        "name": "חולצת פולו קלאסית לגברים Gant",
-        "name_en": "Gant Men's Classic Piqué Polo Shirt",
-        "price": 128.0,
-        "category_id": "ab027234-de38-4cb7-8801-d61a4d730060"
-      },
-      {
-        "id": "5f1ace00-7a86-4122-9e5d-04fe4bbb3fd9",
-        "name": "מכנסי Alo Yoga רגל רחבה",
-        "name_en": "Alo Yoga Wide-Leg Pants",
-        "price": 124.0,
+        "id": "68f53c4b-765a-4a4f-aca3-1bed4c1e1340",
+        "name": "מכנסי ג'ינס דגם Levi's רחבים עם קרעים",
+        "name_en": "Levi's Wide Leg Ripped Jeans",
+        "price": 112.0,
         "category_id": "5a8b79fa-f6a0-47c1-99c5-09095a950839"
       },
       {
@@ -8301,12 +8259,58 @@
         "name_en": "Lululemon Scuba Oversized Joggers",
         "price": 118.0,
         "category_id": "18cf0cec-b4e2-49c5-98d7-d78155ebaf2f"
+      },
+      {
+        "id": "f13db50c-721c-4594-905a-68e0b51ea835",
+        "name": "מכנסי כדורסל ג'ורדן דיימונד",
+        "name_en": "Jordan Diamond Basketball Shorts",
+        "price": 109.0,
+        "category_id": "18cf0cec-b4e2-49c5-98d7-d78155ebaf2f"
+      },
+      {
+        "id": "e67b3cec-ca79-4bd9-8a0c-9c0e49fa6696",
+        "name": "ג'קט שרפה פליז UGG Marlene",
+        "name_en": "UGG Marlene Sherpa Jacket",
+        "price": 138.0,
+        "category_id": "81a4faf3-96f3-456e-be10-4d9060ad55b3"
+      },
+      {
+        "id": "39f17943-5f91-4e27-b7c7-81cf54261ea0",
+        "name": "משקפי שמש גוצ'י עגולים",
+        "name_en": "Gucci Round Sunglasses",
+        "price": 125.0,
+        "category_id": "105c4ef2-81b7-4ddf-9cc1-d7d64dc46d29"
+      },
+      {
+        "id": "6a1c8aaa-35cd-41cf-a52c-26dc70e7cb1a",
+        "name": "אדידס סמבה דפס מנומר",
+        "name_en": "Adidas Samba Leopard Print",
+        "price": 149.0,
+        "category_id": "9a4e7159-11ad-4a88-a784-5029eed17b84"
+      },
+      {
+        "id": "2b1b99df-1fc9-42f4-8bff-427413776ac5",
+        "name": "ארנק עור טומי הילפיגר לגבר",
+        "name_en": "Tommy Hilfiger Men's Leather Wallet",
+        "price": 103.0,
+        "category_id": "a4c770f5-ce1d-404e-9cff-d80699d0266e"
+      },
+      {
+        "id": "9a3428e1-f8b5-4b2f-b219-8d26043866bf",
+        "name": "מגפי זמש עם פלטפורמה אג",
+        "name_en": "Platform Suede Boots UGG",
+        "price": 142.0,
+        "category_id": "40d47943-7c16-49b8-8852-8b5fea6ffd7d"
       }
     ]
   },
   "warmup_poll": {
     "message_id": 3460,
     "wa_id": "3EB01D75E28104B4E3246F",
-    "winner": ""
+    "winner": "מעילים ובגדי חורף",
+    "votes": {
+      "נעליים וסניקרס": 1,
+      "מעילים ובגדי חורף": 3
+    }
   }
 }
